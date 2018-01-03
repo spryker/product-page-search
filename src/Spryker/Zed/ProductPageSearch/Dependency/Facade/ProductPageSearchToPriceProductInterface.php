@@ -7,7 +7,7 @@
 
 namespace Spryker\Zed\ProductPageSearch\Dependency\Facade;
 
-interface ProductPageSearchToPriceInterface
+interface ProductPageSearchToPriceProductInterface
 {
 
     /**
@@ -16,13 +16,13 @@ interface ProductPageSearchToPriceInterface
      *
      * @return int
      */
-    public function getPriceBySku($sku, $priceTypeName = null);
+    public function findPriceBySku($sku, $priceTypeName = null);
 
     /**
      * @param string $sku
      *
-     * @return \Generated\Shared\Transfer\PriceProductTransfer[]
+     * @return array
      */
-    public function findPricesBySku($sku);
+    public function findPricesBySkuGroupedForCurrentStore($sku);
 
 }
