@@ -9,30 +9,29 @@ namespace Spryker\Zed\ProductPageSearch\Communication\Plugin\PageDataExpander;
 
 use Generated\Shared\Transfer\LocaleTransfer;
 use Generated\Shared\Transfer\ProductPageSearchTransfer;
+use Spryker\Shared\ProductPageSearch\ProductPageSearchConfig;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\ProductCategory\Persistence\ProductCategoryQueryContainer;
 use Spryker\Zed\ProductPageSearch\Dependency\Plugin\ProductPageDataExpanderInterface;
 
 /**
- * @deprecated Use \Spryker\Zed\ProductPageSearch\Communication\Plugin\PageDataExpander\ProductCategoryPageDataLoaderExpanderPlugin instead.
- *
  * @method \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchQueryContainerInterface getQueryContainer()
  * @method \Spryker\Zed\ProductPageSearch\Communication\ProductPageSearchCommunicationFactory getFactory()
  * @method \Spryker\Zed\ProductPageSearch\Business\ProductPageSearchFacadeInterface getFacade()
  */
-class ProductCategoryPageDataExpanderPlugin extends AbstractPlugin implements ProductPageDataExpanderInterface
+class ProductCategoryPageDataLoaderExpanderPlugin extends AbstractPlugin implements ProductPageDataExpanderInterface
 {
     public const RESULT_FIELD_PRODUCT_ORDER = 'product_order';
 
     /**
-     * @var array|null
+     * @var array
      */
     protected static $categoryTree;
 
     /**
-     * @var array|null
+     * @var array
      */
-    protected static $categoryName;
+    protected static $categoryNames;
 
     /**
      * @api
@@ -44,6 +43,7 @@ class ProductCategoryPageDataExpanderPlugin extends AbstractPlugin implements Pr
      */
     public function expandProductPageData(array $productData, ProductPageSearchTransfer $productAbstractPageSearchTransfer)
     {
+        $productCategoryEntities = $productData[ProductPageSearchConfig::PRODUCT_ABSTRACT_PAGE_LOAD_DATA]->getCategories();
         $allParentCategoryIds = [];
         $localeTransfer = (new LocaleTransfer())
             ->setIdLocale($productData['Locale']['id_locale']);
@@ -66,9 +66,9 @@ class ProductCategoryPageDataExpanderPlugin extends AbstractPlugin implements Pr
 
         $this->setSorting(
             $allParentCategoryIds,
-            $productData['fk_product_abstract'],
             $localeTransfer,
-            $productAbstractPageSearchTransfer
+            $productAbstractPageSearchTransfer,
+            $productCategoryEntities
         );
     }
 
@@ -100,10 +100,15 @@ class ProductCategoryPageDataExpanderPlugin extends AbstractPlugin implements Pr
             ->queryCategoryNode($localeTransfer->getIdLocale())
             ->find();
 
+        $categoryEntities = $this->getQueryContainer()->queryAllCategoriesWithAttributesAndOrderByDescendant()->find();
+        $formattedCategoriesByLocaleAndNodeIds = $this->formatCategoriesWithLocaleAndNodIds($categoryEntities);
+
         foreach ($categoryNodes as $categoryNodeEntity) {
-            $pathData = $this->getFactory()->getCategoryQueryContainer()
-                ->queryPath($categoryNodeEntity->getIdCategoryNode(), $localeTransfer->getIdLocale(), false)
-                ->find();
+            $pathData = [];
+
+            if (isset($formattedCategoriesByLocaleAndNodeIds[$localeTransfer->getIdLocale()][$categoryNodeEntity->getIdCategoryNode()])) {
+                $pathData = $formattedCategoriesByLocaleAndNodeIds[$localeTransfer->getIdLocale()][$categoryNodeEntity->getIdCategoryNode()];
+            }
 
             static::$categoryTree[$categoryNodeEntity->getIdCategoryNode()] = [];
 
@@ -161,11 +166,12 @@ class ProductCategoryPageDataExpanderPlugin extends AbstractPlugin implements Pr
      */
     protected function getName($idCategory, LocaleTransfer $localeTransfer)
     {
-        if (static::$categoryName === null) {
+        $idLocale = $localeTransfer->getIdLocale();
+        if (static::$categoryNames === null || !isset(static::$categoryNames[$idLocale])) {
             $this->loadNames($localeTransfer);
         }
 
-        return isset(static::$categoryName[$idCategory]) ? static::$categoryName[$idCategory] : null;
+        return isset(static::$categoryNames[$idLocale][$idCategory]) ? static::$categoryNames[$idLocale][$idCategory] : null;
     }
 
     /**
@@ -175,7 +181,9 @@ class ProductCategoryPageDataExpanderPlugin extends AbstractPlugin implements Pr
      */
     protected function loadNames(LocaleTransfer $localeTransfer)
     {
-        static::$categoryName = [];
+        if (!static::$categoryNames) {
+            static::$categoryNames = [];
+        }
 
         $categoryAttributes = $this
             ->getQueryContainer()
@@ -186,32 +194,37 @@ class ProductCategoryPageDataExpanderPlugin extends AbstractPlugin implements Pr
             ->find();
 
         foreach ($categoryAttributes as $categoryAttributeEntity) {
-            static::$categoryName[$categoryAttributeEntity->getFkCategory()] = $categoryAttributeEntity->getName();
+            static::$categoryNames[$localeTransfer->getIdLocale()][$categoryAttributeEntity->getFkCategory()] = $categoryAttributeEntity->getName();
         }
     }
 
     /**
      * @param array $directParentCategories
-     * @param int $idProductAbstract
      * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
      * @param \Generated\Shared\Transfer\ProductPageSearchTransfer $productAbstractPageSearchTransfer
+     * @param array $productCategoryEntities
      *
      * @return void
      */
     protected function setSorting(
         array $directParentCategories,
-        $idProductAbstract,
         LocaleTransfer $localeTransfer,
-        ProductPageSearchTransfer $productAbstractPageSearchTransfer
+        ProductPageSearchTransfer $productAbstractPageSearchTransfer,
+        array $productCategoryEntities
     ) {
         $maxProductOrder = (pow(2, 31) - 1);
-        $productCategoryEntities = $this->findNodeEntitiesWithProductOrderPosition(
-            $directParentCategories,
-            $idProductAbstract
-        );
+
+        $filteredProductCategoriesByDirectParents = [];
+        if ($productCategoryEntities) {
+            foreach ($productCategoryEntities as $productCategory) {
+                if (in_array($productCategory->getVirtualColumn('id_category_node'), $directParentCategories)) {
+                    $filteredProductCategoriesByDirectParents[] = $productCategory;
+                }
+            }
+        }
 
         $sortedCategories = [];
-        foreach ($productCategoryEntities as $productCategoryEntity) {
+        foreach ($filteredProductCategoriesByDirectParents as $productCategoryEntity) {
             $idCategoryNode = $productCategoryEntity->getVirtualColumn(
                 ProductCategoryQueryContainer::VIRTUAL_COLUMN_ID_CATEGORY_NODE
             );
@@ -225,19 +238,17 @@ class ProductCategoryPageDataExpanderPlugin extends AbstractPlugin implements Pr
     }
 
     /**
-     * @param int[] $directParentCategories
-     * @param int $idProductAbstract
+     * @param array $categoryEntities
      *
-     * @return \Orm\Zed\ProductCategory\Persistence\SpyProductCategory[]|\Propel\Runtime\Collection\ObjectCollection
+     * @return array
      */
-    protected function findNodeEntitiesWithProductOrderPosition(array $directParentCategories, $idProductAbstract)
+    protected function formatCategoriesWithLocaleAndNodIds(array $categoryEntities)
     {
-        return $this
-            ->getFactory()->getProductCategoryQueryContainer()
-            ->queryProductCategoryMappingsByIdAbstractProductAndIdsCategoryNode(
-                $idProductAbstract,
-                $directParentCategories
-            )
-            ->find();
+        $categories = [];
+        foreach ($categoryEntities as $categoryEntity) {
+            $categories[$categoryEntity['fk_locale']][$categoryEntity['fk_category_node_descendant']][] = $categoryEntity;
+        }
+
+        return $categories;
     }
 }
