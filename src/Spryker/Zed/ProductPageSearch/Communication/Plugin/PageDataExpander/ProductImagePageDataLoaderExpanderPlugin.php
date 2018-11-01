@@ -8,17 +8,16 @@
 namespace Spryker\Zed\ProductPageSearch\Communication\Plugin\PageDataExpander;
 
 use Generated\Shared\Transfer\ProductPageSearchTransfer;
+use Spryker\Shared\ProductPageSearch\ProductPageSearchConfig;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\ProductPageSearch\Dependency\Plugin\ProductPageDataExpanderInterface;
 
 /**
- * @deprecated Use \Spryker\Zed\ProductPageSearch\Communication\Plugin\PageDataExpander\ProductImagePageDataLoaderExpanderPlugin instead.
- *
  * @method \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchQueryContainerInterface getQueryContainer()
  * @method \Spryker\Zed\ProductPageSearch\Communication\ProductPageSearchCommunicationFactory getFactory()
  * @method \Spryker\Zed\ProductPageSearch\Business\ProductPageSearchFacadeInterface getFacade()
  */
-class ProductImagePageDataExpanderPlugin extends AbstractPlugin implements ProductPageDataExpanderInterface
+class ProductImagePageDataLoaderExpanderPlugin extends AbstractPlugin implements ProductPageDataExpanderInterface
 {
     /**
      * @api
@@ -30,25 +29,25 @@ class ProductImagePageDataExpanderPlugin extends AbstractPlugin implements Produ
      */
     public function expandProductPageData(array $productData, ProductPageSearchTransfer $productAbstractPageSearchTransfer)
     {
-        $images = $this->generateImages($productData['id_image_set']);
+        $images = [];
+        $imageSets = $productData[ProductPageSearchConfig::PRODUCT_ABSTRACT_PAGE_LOAD_DATA]->getImages();
+        $imageSetsByLocale = $imageSets[$productData['fk_locale']] ?? [];
+
+        /** @var \Orm\Zed\ProductImage\Persistence\SpyProductImageSet[] $imageSetsByLocale */
+        foreach ($imageSetsByLocale as $imageSet) {
+            $images = array_merge($images, $this->generateImages($imageSet->getSpyProductImageSetToProductImages()));
+        }
+
         $productAbstractPageSearchTransfer->setProductImages($images);
     }
 
     /**
-     * @param int $idImageSet
+     * @param \Orm\Zed\ProductImage\Persistence\SpyProductImageSetToProductImage[] $imagesCollection
      *
      * @return array
      */
-    protected function generateImages($idImageSet)
+    protected function generateImages($imagesCollection)
     {
-        if ($idImageSet === null) {
-            return [];
-        }
-
-        $imagesCollection = $this->getFactory()->getProductImageQueryContainer()
-            ->queryImagesByIdProductImageSet($idImageSet)
-            ->find();
-
         $result = [];
 
         foreach ($imagesCollection as $image) {
