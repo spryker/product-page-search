@@ -5,26 +5,30 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\ProductPageSearch\Communication\Plugin\PageMapExpander;
+namespace Spryker\Zed\ProductPageSearch\Communication\Plugin\PageMapExpander\Elasticsearch;
 
 use Generated\Shared\Transfer\LocaleTransfer;
 use Generated\Shared\Transfer\PageMapTransfer;
 use Spryker\Client\Search\Plugin\Elasticsearch\QueryExpander\SortedCategoryQueryExpanderPlugin;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
-use Spryker\Zed\ProductPageSearch\Dependency\Plugin\ProductPageMapExpanderInterface;
-use Spryker\Zed\Search\Business\Model\Elasticsearch\DataMapper\PageMapBuilderInterface;
+use Spryker\Zed\ProductPageSearchExtension\Dependency\PageMapBuilderInterface;
+use Spryker\Zed\ProductPageSearchExtension\Dependency\Plugin\ProductAbstractPageMapExpanderPluginInterface;
 
 /**
- * @deprecated Use `\Spryker\Zed\ProductPageSearch\Communication\Plugin\PageMapExpander\Elasticsearch\ProductCategoryPageMapExpanderPlugin` instead.
- *
  * @method \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchQueryContainerInterface getQueryContainer()
  * @method \Spryker\Zed\ProductPageSearch\Communication\ProductPageSearchCommunicationFactory getFactory()
  * @method \Spryker\Zed\ProductPageSearch\Business\ProductPageSearchFacadeInterface getFacade()
  * @method \Spryker\Zed\ProductPageSearch\ProductPageSearchConfig getConfig()
  */
-class ProductCategoryPageMapExpanderPlugin extends AbstractPlugin implements ProductPageMapExpanderInterface
+class ProductCategoryPageMapExpanderPlugin extends AbstractPlugin implements ProductAbstractPageMapExpanderPluginInterface
 {
-    public const RESULT_FIELD_PRODUCT_ORDER = 'product_order';
+    protected const KEY_CATEGORY_NODE_IDS = 'category_node_ids';
+    protected const KEY_ALL_PARENT_CATEGORY_NODE_IDS = 'all_parent_category_ids';
+    protected const KEY_SORTED_CATEGORIES = 'sorted_categories';
+    protected const KEY_ALL_NODE_PARENTS = 'all_node_parents';
+    protected const KEY_PRODUCT_ORDER = 'product_order';
+    protected const KEY_CATEGORY_NAMES = 'category_names';
+    protected const KEY_BOOSTED_CATEGORY_NAMES = 'boosted_category_names';
 
     /**
      * @var array
@@ -37,10 +41,12 @@ class ProductCategoryPageMapExpanderPlugin extends AbstractPlugin implements Pro
     protected static $categoryName;
 
     /**
+     * {@inheritDoc}
+     *
      * @api
      *
      * @param \Generated\Shared\Transfer\PageMapTransfer $pageMapTransfer
-     * @param \Spryker\Zed\Search\Business\Model\Elasticsearch\DataMapper\PageMapBuilderInterface $pageMapBuilder
+     * @param \Spryker\Zed\ProductPageSearchExtension\Dependency\PageMapBuilderInterface $pageMapBuilder
      * @param array $productData
      * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
      *
@@ -48,8 +54,8 @@ class ProductCategoryPageMapExpanderPlugin extends AbstractPlugin implements Pro
      */
     public function expandProductPageMap(PageMapTransfer $pageMapTransfer, PageMapBuilderInterface $pageMapBuilder, array $productData, LocaleTransfer $localeTransfer)
     {
-        $directParentCategories = $productData['category_node_ids'];
-        $allParentCategories = $productData['all_parent_category_ids'];
+        $directParentCategories = $productData[static::KEY_CATEGORY_NODE_IDS];
+        $allParentCategories = $productData[static::KEY_ALL_PARENT_CATEGORY_NODE_IDS];
 
         $pageMapBuilder->addCategory($pageMapTransfer, $allParentCategories, $directParentCategories);
 
@@ -71,7 +77,7 @@ class ProductCategoryPageMapExpanderPlugin extends AbstractPlugin implements Pro
     }
 
     /**
-     * @param \Spryker\Zed\Search\Business\Model\Elasticsearch\DataMapper\PageMapBuilderInterface $pageMapBuilder
+     * @param \Spryker\Zed\ProductPageSearchExtension\Dependency\PageMapBuilderInterface $pageMapBuilder
      * @param \Generated\Shared\Transfer\PageMapTransfer $pageMapTransfer
      * @param array $allParentCategories
      * @param array $directParentCategories
@@ -86,14 +92,14 @@ class ProductCategoryPageMapExpanderPlugin extends AbstractPlugin implements Pro
         array $directParentCategories,
         array $productData
     ) {
-        $boostedCategoryNames = $productData['boosted_category_names'];
+        $boostedCategoryNames = $productData[static::KEY_BOOSTED_CATEGORY_NAMES];
         foreach ($directParentCategories as $idCategory) {
             if (isset($boostedCategoryNames[$idCategory])) {
                 $pageMapBuilder->addFullTextBoosted($pageMapTransfer, $boostedCategoryNames[$idCategory]);
             }
         }
 
-        $categoryNames = $productData['category_names'];
+        $categoryNames = $productData[static::KEY_CATEGORY_NAMES];
         foreach ($allParentCategories as $idCategory) {
             if (in_array($idCategory, $directParentCategories)) {
                 continue;
@@ -106,7 +112,7 @@ class ProductCategoryPageMapExpanderPlugin extends AbstractPlugin implements Pro
     }
 
     /**
-     * @param \Spryker\Zed\Search\Business\Model\Elasticsearch\DataMapper\PageMapBuilderInterface $pageMapBuilder
+     * @param \Spryker\Zed\ProductPageSearchExtension\Dependency\PageMapBuilderInterface $pageMapBuilder
      * @param \Generated\Shared\Transfer\PageMapTransfer $pageMapTransfer
      * @param array $productData
      *
@@ -117,26 +123,26 @@ class ProductCategoryPageMapExpanderPlugin extends AbstractPlugin implements Pro
         PageMapTransfer $pageMapTransfer,
         array $productData
     ) {
-        $sortedCategories = $productData['sorted_categories'];
+        $sortedCategories = $productData[static::KEY_SORTED_CATEGORIES];
         foreach ($sortedCategories as $idCategoryNode => $sortedCategory) {
             $pageMapBuilder->addIntegerSort(
                 $pageMapTransfer,
                 SortedCategoryQueryExpanderPlugin::buildSortFieldName($idCategoryNode),
-                $sortedCategory['product_order']
+                $sortedCategory[static::KEY_PRODUCT_ORDER]
             );
 
             $this->setSortingForTreeParents(
                 $pageMapBuilder,
                 $pageMapTransfer,
                 $idCategoryNode,
-                $sortedCategory['product_order'],
+                $sortedCategory[static::KEY_PRODUCT_ORDER],
                 $productData
             );
         }
     }
 
     /**
-     * @param \Spryker\Zed\Search\Business\Model\Elasticsearch\DataMapper\PageMapBuilderInterface $pageMapBuilder
+     * @param \Spryker\Zed\ProductPageSearchExtension\Dependency\PageMapBuilderInterface $pageMapBuilder
      * @param \Generated\Shared\Transfer\PageMapTransfer $pageMapTransfer
      * @param int $idCategoryNode
      * @param int $productOrder
@@ -151,11 +157,11 @@ class ProductCategoryPageMapExpanderPlugin extends AbstractPlugin implements Pro
         $productOrder,
         array $productData
     ) {
-        if (!isset($productData['sorted_categories'][$idCategoryNode]['all_node_parents'])) {
+        if (!isset($productData[static::KEY_SORTED_CATEGORIES][$idCategoryNode][static::KEY_ALL_NODE_PARENTS])) {
             return;
         }
 
-        $idsParentCategoryNode = $productData['sorted_categories'][$idCategoryNode]['all_node_parents'];
+        $idsParentCategoryNode = $productData[static::KEY_SORTED_CATEGORIES][$idCategoryNode][static::KEY_ALL_NODE_PARENTS];
         foreach ($idsParentCategoryNode as $idParentCategoryNode) {
             $pageMapBuilder->addIntegerSort(
                 $pageMapTransfer,
