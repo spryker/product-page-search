@@ -15,6 +15,9 @@ use Spryker\Zed\ProductCategory\Persistence\ProductCategoryQueryContainer;
 use Spryker\Zed\ProductPageSearch\Dependency\Plugin\ProductPageDataExpanderInterface;
 
 /**
+ *
+ * @deprecated Use {@link \Spryker\Zed\ProductCategorySearch\Communication\Plugin\PageDataExpander\ProductCategoryPageDataLoaderExpanderPlugin} instead.
+ *
  * @method \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchQueryContainerInterface getQueryContainer()
  * @method \Spryker\Zed\ProductPageSearch\Communication\ProductPageSearchCommunicationFactory getFactory()
  * @method \Spryker\Zed\ProductPageSearch\Business\ProductPageSearchFacadeInterface getFacade()
@@ -216,11 +219,9 @@ class ProductCategoryPageDataLoaderExpanderPlugin extends AbstractPlugin impleme
     ) {
         $maxProductOrder = (pow(2, 31) - 1);
 
-        $store = $productAbstractPageSearchTransfer->getStore();
         $filteredProductCategoriesByDirectParents = [];
-
-        if ($productCategoryEntities && isset($productCategoryEntities[$store])) {
-            foreach ($productCategoryEntities[$store] as $productCategory) {
+        if ($productCategoryEntities) {
+            foreach ($productCategoryEntities as $productCategory) {
                 if (in_array($productCategory->getVirtualColumn('id_category_node'), $directParentCategories)) {
                     $filteredProductCategoriesByDirectParents[] = $productCategory;
                 }
