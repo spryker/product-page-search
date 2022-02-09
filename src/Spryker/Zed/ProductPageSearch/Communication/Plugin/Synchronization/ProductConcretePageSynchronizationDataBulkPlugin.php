@@ -52,16 +52,16 @@ class ProductConcretePageSynchronizationDataBulkPlugin extends AbstractPlugin im
      *
      * @param int $offset
      * @param int $limit
-     * @param array<int> $ids
+     * @param array<int> $productConcreteIds
      *
      * @return array<\Generated\Shared\Transfer\SynchronizationDataTransfer>
      */
-    public function getData(int $offset, int $limit, array $ids = []): array
+    public function getData(int $offset, int $limit, array $productConcreteIds = []): array
     {
         return $this->getFacade()
             ->getSynchronizationDataTransfersByFilterAndProductIds(
                 $this->createFilterTransfer($offset, $limit),
-                $ids,
+                $productConcreteIds,
             );
     }
 

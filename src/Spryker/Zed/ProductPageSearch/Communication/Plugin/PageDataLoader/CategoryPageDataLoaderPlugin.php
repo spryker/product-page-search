@@ -42,7 +42,7 @@ class CategoryPageDataLoaderPlugin extends AbstractPlugin implements ProductPage
      * @param array<int> $productAbstractIds
      * @param array<\Generated\Shared\Transfer\ProductPayloadTransfer> $payloadTransfers
      *
-     * @return array<\Generated\Shared\Transfer\ProductPayloadTransfer>
+     * @return array
      */
     protected function setProductCategories(array $productAbstractIds, array $payloadTransfers): array
     {

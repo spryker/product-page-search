@@ -54,14 +54,14 @@ class ProductConcretePageSynchronizationDataPlugin extends AbstractPlugin implem
      *
      * @api
      *
-     * @param array<int> $ids Concrete product IDs.
+     * @param array<int> $productConcreteIds
      *
      * @return array<\Generated\Shared\Transfer\SynchronizationDataTransfer>
      */
-    public function getData(array $ids = []): array
+    public function getData(array $productConcreteIds = []): array
     {
         $synchronizationDataTransfers = [];
-        $productConcretePageSearchTransfers = $this->getProductConcretePageSearchTransfers($ids);
+        $productConcretePageSearchTransfers = $this->getProductConcretePageSearchTransfers($productConcreteIds);
 
         /** @var \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer */
         foreach ($productConcretePageSearchTransfers as $productConcretePageSearchTransfer) {

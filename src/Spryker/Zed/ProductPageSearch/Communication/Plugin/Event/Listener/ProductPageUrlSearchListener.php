@@ -39,7 +39,7 @@ class ProductPageUrlSearchListener extends AbstractProductPageSearchListener imp
     }
 
     /**
-     * @param array<\Generated\Shared\Transfer\EventEntityTransfer> $eventTransfers
+     * @param array $eventTransfers
      *
      * @return array
      */

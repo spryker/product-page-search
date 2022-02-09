@@ -110,22 +110,22 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
     }
 
     /**
-     * @param array<int> $productIds
+     * @param array<int> $productConcreteIds
      *
      * @return void
      */
-    public function publish(array $productIds): void
+    public function publish(array $productConcreteIds): void
     {
         $isPoolingStateChanged = $this->disableInstancePooling();
 
-        $productIds = array_unique(array_filter($productIds));
+        $productConcreteIds = array_unique(array_filter($productConcreteIds));
 
-        if (!$productIds) {
+        if (!$productConcreteIds) {
             return;
         }
 
         $productConcreteIdsChunks = array_chunk(
-            $productIds,
+            $productConcreteIds,
             $this->productPageSearchConfig->getProductConcretePagePublishChunkSize(),
         );
 

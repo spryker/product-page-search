@@ -33,9 +33,7 @@ class ProductImagePageDataLoaderExpanderPlugin extends AbstractPlugin implements
     public function expandProductPageData(array $productData, ProductPageSearchTransfer $productAbstractPageSearchTransfer)
     {
         $images = [];
-        /** @var \Generated\Shared\Transfer\ProductPayloadTransfer $productPayloadTransfer */
-        $productPayloadTransfer = $productData[ProductPageSearchConfig::PRODUCT_ABSTRACT_PAGE_LOAD_DATA];
-        $imageSets = $productPayloadTransfer->getImages();
+        $imageSets = $productData[ProductPageSearchConfig::PRODUCT_ABSTRACT_PAGE_LOAD_DATA]->getImages();
         /** @var array<\Orm\Zed\ProductImage\Persistence\SpyProductImageSet> $imageSetsByLocale */
         $imageSetsByLocale = $imageSets[$productData['fk_locale']] ?? [];
 
