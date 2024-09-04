@@ -14,6 +14,8 @@ use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductIm
 
 class ProductConcretePageSearchExpander implements ProductConcretePageSearchExpanderInterface
 {
+    protected static array $imageSetCollectionsResolved = [];
+
     /**
      * @var \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductImageFacadeInterface
      */
@@ -41,7 +43,12 @@ class ProductConcretePageSearchExpander implements ProductConcretePageSearchExpa
 
         $images = [];
 
-        $productImageSetTransfers = $this->productImageFacade->getProductImagesSetCollectionByProductId($productConcretePageSearchTransfer->getFkProduct());
+        if (!array_key_exists($productConcretePageSearchTransfer->getFkProduct(), static::$imageSetCollectionsResolved)) {
+            static::$imageSetCollectionsResolved[$productConcretePageSearchTransfer->getFkProduct()] = $this->productImageFacade
+                ->getProductImagesSetCollectionByProductId($productConcretePageSearchTransfer->getFkProduct());
+        }
+
+        $productImageSetTransfers = static::$imageSetCollectionsResolved[$productConcretePageSearchTransfer->getFkProduct()];
         $productImageSetTransfers = $this->productImageFacade->resolveProductImageSetsForLocale(
             new ArrayObject($productImageSetTransfers),
             $productConcretePageSearchTransfer->getLocale(),
