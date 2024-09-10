@@ -14,6 +14,9 @@ use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductIm
 
 class ProductConcretePageSearchExpander implements ProductConcretePageSearchExpanderInterface
 {
+    /**
+     * @var array<int, array<\Generated\Shared\Transfer\ProductImageSetTransfer>>
+     */
     protected static array $imageSetCollectionsResolved = [];
 
     /**
@@ -43,12 +46,7 @@ class ProductConcretePageSearchExpander implements ProductConcretePageSearchExpa
 
         $images = [];
 
-        if (!array_key_exists($productConcretePageSearchTransfer->getFkProduct(), static::$imageSetCollectionsResolved)) {
-            static::$imageSetCollectionsResolved[$productConcretePageSearchTransfer->getFkProduct()] = $this->productImageFacade
-                ->getProductImagesSetCollectionByProductId($productConcretePageSearchTransfer->getFkProduct());
-        }
-
-        $productImageSetTransfers = static::$imageSetCollectionsResolved[$productConcretePageSearchTransfer->getFkProduct()];
+        $productImageSetTransfers = $this->getProductImagesSetCollectionByProductId($productConcretePageSearchTransfer->getFkProduct());
         $productImageSetTransfers = $this->productImageFacade->resolveProductImageSetsForLocale(
             new ArrayObject($productImageSetTransfers),
             $productConcretePageSearchTransfer->getLocale(),
@@ -61,6 +59,21 @@ class ProductConcretePageSearchExpander implements ProductConcretePageSearchExpa
         $productConcretePageSearchTransfer->setImages($images);
 
         return $productConcretePageSearchTransfer;
+    }
+
+    /**
+     * @param int $idProduct
+     *
+     * @return array<\Generated\Shared\Transfer\ProductImageSetTransfer>
+     */
+    protected function getProductImagesSetCollectionByProductId(int $idProduct): array
+    {
+        if (!array_key_exists($idProduct, static::$imageSetCollectionsResolved)) {
+            static::$imageSetCollectionsResolved[$idProduct] = $this->productImageFacade
+                ->getProductImagesSetCollectionByProductId($idProduct);
+        }
+
+        return static::$imageSetCollectionsResolved[$idProduct];
     }
 
     /**
