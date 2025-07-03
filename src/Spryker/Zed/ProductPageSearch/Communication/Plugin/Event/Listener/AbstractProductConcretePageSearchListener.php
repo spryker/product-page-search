@@ -16,13 +16,27 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 abstract class AbstractProductConcretePageSearchListener extends AbstractPlugin implements EventBulkHandlerInterface
 {
     /**
+     * @var array<int>
+     */
+    protected static $publishedProductConcreteIds = [];
+
+    /**
+     * @var array<int>
+     */
+    protected static $unpublishedProductConcreteIds = [];
+
+    /**
      * @param array<int> $productIds
      *
      * @return void
      */
     protected function publish(array $productIds): void
     {
-        $this->getFacade()->publishProductConcretes($productIds);
+        $productIds = array_values(array_unique(array_diff($productIds, static::$publishedProductConcreteIds)));
+        if ($productIds) {
+            $this->getFacade()->publishProductConcretes($productIds);
+        }
+        static::$publishedProductConcreteIds = array_merge(static::$publishedProductConcreteIds, $productIds);
     }
 
     /**
@@ -32,6 +46,11 @@ abstract class AbstractProductConcretePageSearchListener extends AbstractPlugin 
      */
     protected function unpublish(array $productIds): void
     {
-        $this->getFacade()->unpublishProductConcretes($productIds);
+        $productIds = array_values(array_unique(array_diff($productIds, static::$unpublishedProductConcreteIds)));
+        if ($productIds) {
+            $this->getFacade()->unpublishProductConcretes($productIds);
+        }
+
+        static::$unpublishedProductConcreteIds = array_merge(static::$unpublishedProductConcreteIds, $productIds);
     }
 }
