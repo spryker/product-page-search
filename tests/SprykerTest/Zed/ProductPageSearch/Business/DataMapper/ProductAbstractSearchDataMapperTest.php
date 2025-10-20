@@ -5,7 +5,7 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\ProductPageSearch\tests\SprykerTest\Zed\ProductPageSearch\Business\DataMapper;
+namespace SprykerTest\Zed\ProductPageSearch\Business\DataMapper;
 
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\LocaleTransfer;
@@ -20,9 +20,6 @@ use Spryker\Zed\ProductPageSearchExtension\Dependency\Plugin\ProductAbstractMapE
 /**
  * Auto-generated group annotations
  *
- * @group Spryker
- * @group ProductPageSearch
- * @group tests
  * @group SprykerTest
  * @group Zed
  * @group ProductPageSearch
@@ -30,8 +27,6 @@ use Spryker\Zed\ProductPageSearchExtension\Dependency\Plugin\ProductAbstractMapE
  * @group DataMapper
  * @group ProductAbstractSearchDataMapperTest
  * Add your own group annotations below this line
- *
- * @property \SprykerTest\Zed\ProductPageSearch\ProductPageSearchBusinessTester $tester
  */
 class ProductAbstractSearchDataMapperTest extends Unit
 {

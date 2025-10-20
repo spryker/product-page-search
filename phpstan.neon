@@ -2,7 +2,7 @@ parameters:
     level: 7
     reportUnmatchedIgnoredErrors: false
     excludePaths:
-        - '%rootDir%/../../../vendor/spryker/spryker/Bundles/ProductPageSearch/src/Spryker/Zed/ProductPageSearch/Persistence/ProductPageSearchQueryContainer.php'
+        - '%rootDir%/../../../src/Spryker/ProductPageSearch/src/Spryker/Zed/ProductPageSearch/Persistence/ProductPageSearchQueryContainer.php'
     ignoreErrors:
         - '#Cannot access offset .+ on .+SpyCategoryNode.#'
         - '#Parameter \#2 \$pageMapBuilder of method .+ProductConcretePageMapExpanderPluginInterface::expand\(\) expects .+ProductPageSearchExtension\\Dependency\\PageMapBuilderInterface, .+Search\\Business\\Model\\Elasticsearch\\DataMapper\\PageMapBuilderInterface given.#'

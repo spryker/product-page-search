@@ -5,7 +5,7 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\ProductPageSearch\tests\SprykerTest\Zed\ProductPageSearch\Business\DataMapper;
+namespace SprykerTest\Zed\ProductPageSearch\Business\DataMapper;
 
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\LocaleTransfer;
@@ -15,9 +15,6 @@ use Spryker\Zed\ProductPageSearch\Business\DataMapper\ProductConcreteSearchDataM
 /**
  * Auto-generated group annotations
  *
- * @group Spryker
- * @group ProductPageSearch
- * @group tests
  * @group SprykerTest
  * @group Zed
  * @group ProductPageSearch
