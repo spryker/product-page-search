@@ -7,6 +7,8 @@
 
 namespace Spryker\Zed\ProductPageSearch\Business;
 
+use Spryker\Client\Search\SearchClientInterface;
+use Spryker\Service\Synchronization\SynchronizationServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\ProductPageSearch\Business\Attribute\ProductPageAttribute;
 use Spryker\Zed\ProductPageSearch\Business\DataMapper\AbstractProductSearchDataMapper;
@@ -25,6 +27,8 @@ use Spryker\Zed\ProductPageSearch\Business\ProductConcretePageSearchReader\Produ
 use Spryker\Zed\ProductPageSearch\Business\ProductConcretePageSearchReader\ProductConcretePageSearchReaderInterface;
 use Spryker\Zed\ProductPageSearch\Business\ProductConcretePageSearchWriter\ProductConcretePageSearchWriter;
 use Spryker\Zed\ProductPageSearch\Business\ProductConcretePageSearchWriter\ProductConcretePageSearchWriterInterface;
+use Spryker\Zed\ProductPageSearch\Business\Provider\PageSearchProductAbstractReadinessProvider;
+use Spryker\Zed\ProductPageSearch\Business\Provider\ProductAbstractReadinessProviderInterface;
 use Spryker\Zed\ProductPageSearch\Business\Publisher\ProductAbstractPagePublisher;
 use Spryker\Zed\ProductPageSearch\Business\Publisher\ProductConcretePageSearchPublisher;
 use Spryker\Zed\ProductPageSearch\Business\Publisher\ProductConcretePageSearchPublisherInterface;
@@ -416,5 +420,33 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
     public function getProductAbstractAddToCartPlugins(): array
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PLUGINS_PRODUCT_ABSTRACT_ADD_TO_CART);
+    }
+
+    /**
+     * @return \Spryker\Zed\ProductPageSearch\Business\Provider\ProductAbstractReadinessProviderInterface
+     */
+    public function createPageSearchProductAbstractReadinessProvider(): ProductAbstractReadinessProviderInterface
+    {
+        return new PageSearchProductAbstractReadinessProvider(
+            $this->getStoreFacade(),
+            $this->getSearchClient(),
+            $this->getSynchronizationService(),
+        );
+    }
+
+    /**
+     * @return \Spryker\Client\Search\SearchClientInterface
+     */
+    protected function getSearchClient(): SearchClientInterface
+    {
+        return $this->getProvidedDependency(ProductPageSearchDependencyProvider::CLIENT_SEARCH);
+    }
+
+    /**
+     * @return \Spryker\Service\Synchronization\SynchronizationServiceInterface
+     */
+    protected function getSynchronizationService(): SynchronizationServiceInterface
+    {
+        return $this->getProvidedDependency(ProductPageSearchDependencyProvider::SERVICE_SYNCHRONIZATION);
     }
 }

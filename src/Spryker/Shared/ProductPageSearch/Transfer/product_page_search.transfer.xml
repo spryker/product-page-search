@@ -95,6 +95,7 @@
         <property name="data" type="string"/>
         <property name="key" type="string"/>
         <property name="store" type="string"/>
+        <property name="reference" type="string"/>
     </transfer>
 
     <transfer name="RawProductAttributes">
@@ -212,6 +213,28 @@
         <property name="idTimestampMap" type="array" associative="true" singular="id" description="Map of event entity IDs to their corresponding timestamps"/>
         <property name="foreignKeyTimestampMap" type="array" associative="true" singular="foreignKey" description="Map of foreign key values to their corresponding timestamps"/>
         <property name="additionalValueTimestampMap" type="array" associative="true" singular="additionalValue" description="Map of additional values to their corresponding timestamps"/>
+    </transfer>
+
+    <transfer name="SearchDocument">
+        <property name="id" type="string"/>
+        <property name="type" type="string"/>
+        <property name="searchContext" type="SearchContext"/>
+    </transfer>
+
+    <transfer name="SearchContext">
+        <property name="sourceIdentifier" type="string"/>
+        <property name="elasticsearchContext" type="ElasticsearchSearchContext"/>
+        <property name="storeName" type="string"/>
+    </transfer>
+
+    <transfer name="ElasticsearchSearchContext">
+        <property name="typeName" type="string"/>
+    </transfer>
+
+    <transfer name="ProductAbstractReadinessRequest" strict="true">
+    </transfer>
+
+    <transfer name="ProductReadiness" strict="true">
     </transfer>
 
 </transfers>

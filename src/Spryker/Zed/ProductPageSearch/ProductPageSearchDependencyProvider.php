@@ -14,6 +14,8 @@ use Orm\Zed\Product\Persistence\SpyProductQuery;
 use Orm\Zed\ProductCategory\Persistence\SpyProductCategoryQuery;
 use Orm\Zed\ProductImage\Persistence\SpyProductImageSetQuery;
 use Orm\Zed\ProductSearch\Persistence\SpyProductSearchQuery;
+use Spryker\Client\Search\SearchClientInterface;
+use Spryker\Service\Synchronization\SynchronizationServiceInterface;
 use Spryker\Shared\ProductPageSearch\ProductPageSearchConfig;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
@@ -108,6 +110,11 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
     /**
      * @var string
      */
+    public const CLIENT_SEARCH = 'CLIENT_SEARCH';
+
+    /**
+     * @var string
+     */
     public const FACADE_PRODUCT = 'FACADE_PRODUCT';
 
     /**
@@ -154,6 +161,11 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
      * @var string
      */
     public const SERVICE_UTIL_SANITIZE = 'SERVICE_UTIL_SANITIZE';
+
+    /**
+     * @var string
+     */
+    public const SERVICE_SYNCHRONIZATION = 'SERVICE_SYNCHRONIZATION';
 
     /**
      * @var string
@@ -352,6 +364,8 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         $container = $this->addProductPageRefreshPlugins($container);
         $container = $this->addProductConcreteCollectionFilterPlugins($container);
         $container = $this->addProductPageSearchCollectionFilterPlugins($container);
+        $container = $this->addSearchClient($container);
+        $container = $this->addSynchronizationService($container);
 
         return $container;
     }
@@ -788,5 +802,33 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
     protected function getProductPageSearchCollectionFilterPlugins(): array
     {
         return [];
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addSearchClient(Container $container): Container
+    {
+        $container->set(static::CLIENT_SEARCH, function (Container $container): SearchClientInterface {
+            return $container->getLocator()->search()->client();
+        });
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addSynchronizationService(Container $container): Container
+    {
+        $container->set(static::SERVICE_SYNCHRONIZATION, function (Container $container): SynchronizationServiceInterface {
+            return $container->getLocator()->synchronization()->service();
+        });
+
+        return $container;
     }
 }
