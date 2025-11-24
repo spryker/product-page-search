@@ -25,7 +25,7 @@
         "spryker/search": "^7.0.0 || ^8.0.0",
         "spryker/store": "^1.7.0",
         "spryker/symfony": "^3.0.0",
-        "spryker/synchronization": "^0.1.0",
+        "spryker/synchronization": "^0.1.0 || ^1.0.0",
         "spryker/synchronization-behavior": "^1.13.0",
         "spryker/synchronization-extension": "^1.0.0",
         "spryker/transfer": "^3.27.0",
