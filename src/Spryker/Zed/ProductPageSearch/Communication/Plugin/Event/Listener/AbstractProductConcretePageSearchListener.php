@@ -27,7 +27,7 @@ abstract class AbstractProductConcretePageSearchListener extends AbstractPlugin 
      */
     protected function publish(array $productIdTimestampMap): void
     {
-        $this->getFacade()->publishWithTimestamp($productIdTimestampMap);
+        $this->getBusinessFactory()->createProductConcretePageSearchPublisher()->publishWithTimestamp($productIdTimestampMap);
     }
 
     /**
