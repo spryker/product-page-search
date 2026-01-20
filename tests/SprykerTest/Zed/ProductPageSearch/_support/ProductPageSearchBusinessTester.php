@@ -236,20 +236,14 @@ class ProductPageSearchBusinessTester extends Actor
      */
     protected function addDependencies(): void
     {
-        $this->addRabbitMqDependency();
-        $this->addPluginSearchPageMapsDependency();
-    }
-
-    /**
-     * @return void
-     */
-    protected function addRabbitMqDependency(): void
-    {
         $this->setDependency(QueueDependencyProvider::QUEUE_ADAPTERS, function (Container $container) {
             return [
                 $container->getLocator()->rabbitMq()->client()->createQueueAdapter(),
+                $container->getLocator()->symfonyMessenger()->client()->createQueueAdapter(),
             ];
         });
+
+        $this->addPluginSearchPageMapsDependency();
     }
 
     /**
