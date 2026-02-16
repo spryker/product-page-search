@@ -51,9 +51,9 @@ abstract class AbstractProductPageSearchListener extends AbstractPlugin implemen
     }
 
     /**
-     * @param list<int> $categoryIds
+     * @param array<int> $categoryIds
      *
-     * @return list<int>
+     * @return array<int>
      */
     protected function getRelatedCategoryIds(array $categoryIds): array
     {
@@ -72,7 +72,7 @@ abstract class AbstractProductPageSearchListener extends AbstractPlugin implemen
     }
 
     /**
-     * @param list<\Generated\Shared\Transfer\NodeTransfer> $categoryNodeTransfers
+     * @param array<\Generated\Shared\Transfer\NodeTransfer> $categoryNodeTransfers
      *
      * @return list<int>
      */

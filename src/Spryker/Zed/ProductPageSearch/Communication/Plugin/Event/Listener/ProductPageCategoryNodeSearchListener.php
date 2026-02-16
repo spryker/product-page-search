@@ -37,6 +37,10 @@ class ProductPageCategoryNodeSearchListener extends AbstractProductPageSearchLis
                 ->setForeignKeyName(SpyCategoryNodeTableMap::COL_FK_CATEGORY),
         )->getForeignKeyTimestampMap();
 
+        if (!$categoryIdTimestampMap) {
+            return;
+        }
+
         $relatedCategoryIds = $this->getRelatedCategoryIds(array_keys($categoryIdTimestampMap));
         $productAbstractIds = $this->getRepository()->getProductAbstractIdsByCategoryIds($relatedCategoryIds);
         if (!$productAbstractIds) {

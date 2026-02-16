@@ -10,7 +10,7 @@ namespace Spryker\Zed\ProductPageSearch\Business\Writer;
 interface ProductAbstractPageSearchWriterInterface
 {
     /**
-     * @param list<\Generated\Shared\Transfer\EventEntityTransfer> $eventEntityTransfers
+     * @param array<\Generated\Shared\Transfer\EventEntityTransfer> $eventEntityTransfers
      *
      * @return void
      */

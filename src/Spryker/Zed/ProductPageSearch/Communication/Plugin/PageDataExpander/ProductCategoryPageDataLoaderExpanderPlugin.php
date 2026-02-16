@@ -184,7 +184,7 @@ class ProductCategoryPageDataLoaderExpanderPlugin extends AbstractPlugin impleme
      * @param int $idCategoryNode
      * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
      *
-     * @return string
+     * @return string|null
      */
     protected function getName($idCategoryNode, LocaleTransfer $localeTransfer)
     {

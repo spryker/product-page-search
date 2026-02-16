@@ -125,14 +125,14 @@ interface ProductPageSearchRepositoryInterface
     /**
      * @param list<int> $categoryNodeIds
      *
-     * @return list<int>
+     * @return array<int>
      */
     public function getCategoryIdsByCategoryNodeIds(array $categoryNodeIds): array;
 
     /**
-     * @param list<int> $categoryIds
+     * @param array<int> $categoryIds
      *
-     * @return list<int>
+     * @return array<int>
      */
     public function getProductAbstractIdsByCategoryIds(array $categoryIds): array;
 

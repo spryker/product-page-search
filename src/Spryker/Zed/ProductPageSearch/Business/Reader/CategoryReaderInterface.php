@@ -10,9 +10,9 @@ namespace Spryker\Zed\ProductPageSearch\Business\Reader;
 interface CategoryReaderInterface
 {
     /**
-     * @param list<int> $categoryIds
+     * @param array<int> $categoryIds
      *
-     * @return list<int>
+     * @return array<int>
      */
     public function getRelatedCategoryIdsByCategoryIds(array $categoryIds): array;
 }

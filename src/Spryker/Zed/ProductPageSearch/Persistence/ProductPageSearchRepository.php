@@ -290,7 +290,7 @@ class ProductPageSearchRepository extends AbstractRepository implements ProductP
      *
      * @param list<int> $categoryNodeIds
      *
-     * @return list<int>
+     * @return array<int>
      */
     public function getCategoryIdsByCategoryNodeIds(array $categoryNodeIds): array
     {
@@ -311,9 +311,9 @@ class ProductPageSearchRepository extends AbstractRepository implements ProductP
     /**
      * @module ProductCategory
      *
-     * @param list<int> $categoryIds
+     * @param array<int> $categoryIds
      *
-     * @return list<int>
+     * @return array<int>
      */
     public function getProductAbstractIdsByCategoryIds(array $categoryIds): array
     {

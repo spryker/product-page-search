@@ -35,9 +35,9 @@ class CategoryReader implements CategoryReaderInterface
     }
 
     /**
-     * @param list<int> $categoryIds
+     * @param array<int> $categoryIds
      *
-     * @return list<int>
+     * @return array<int>
      */
     public function getRelatedCategoryIdsByCategoryIds(array $categoryIds): array
     {
@@ -53,7 +53,7 @@ class CategoryReader implements CategoryReaderInterface
     }
 
     /**
-     * @param list<\Generated\Shared\Transfer\NodeTransfer> $categoryNodeTransfers
+     * @param array<\Generated\Shared\Transfer\NodeTransfer> $categoryNodeTransfers
      *
      * @return list<int>
      */
