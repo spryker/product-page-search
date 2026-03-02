@@ -14,23 +14,11 @@ use Propel\Runtime\Collection\ObjectCollection;
 
 interface ProductPageSearchMapperInterface
 {
-    /**
-     * @param \Orm\Zed\ProductPageSearch\Persistence\SpyProductConcretePageSearch $productConcretePageSearchEntity
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConcretePageSearchTransfer
-     */
     public function mapProductConcretePageSearchEntityToTransfer(
         SpyProductConcretePageSearch $productConcretePageSearchEntity,
         ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
     ): ProductConcretePageSearchTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     * @param \Orm\Zed\ProductPageSearch\Persistence\SpyProductConcretePageSearch $productConcretePageSearchEntity
-     *
-     * @return \Orm\Zed\ProductPageSearch\Persistence\SpyProductConcretePageSearch
-     */
     public function mapProductConcretePageSearchTransferToEntity(
         ProductConcretePageSearchTransfer $productConcretePageSearchTransfer,
         SpyProductConcretePageSearch $productConcretePageSearchEntity
@@ -45,12 +33,6 @@ interface ProductPageSearchMapperInterface
         ObjectCollection $productConcretePageSearchEntityCollection
     ): array;
 
-    /**
-     * @param \Orm\Zed\ProductPageSearch\Persistence\SpyProductConcretePageSearch $productConcretePageSearchEntity
-     * @param \Generated\Shared\Transfer\SynchronizationDataTransfer $synchronizationDataTransfer
-     *
-     * @return \Generated\Shared\Transfer\SynchronizationDataTransfer
-     */
     public function mapProductConcretePageSearchEntityToSynchronizationDataTransfer(
         SpyProductConcretePageSearch $productConcretePageSearchEntity,
         SynchronizationDataTransfer $synchronizationDataTransfer

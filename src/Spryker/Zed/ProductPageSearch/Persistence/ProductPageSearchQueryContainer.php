@@ -499,9 +499,6 @@ class ProductPageSearchQueryContainer extends AbstractQueryContainer implements 
             ->setFormatter(new PropelArraySetFormatter());
     }
 
-    /**
-     * @return string
-     */
     protected function getIdImageSetSubQuery(): string
     {
         $idImageSetSubQuery = $this->getFactory()
@@ -523,11 +520,6 @@ class ProductPageSearchQueryContainer extends AbstractQueryContainer implements 
         return sprintf('(%s)', $idImageSetSubQuery->createSelectSql($params));
     }
 
-    /**
-     * @param \Orm\Zed\ProductImage\Persistence\SpyProductImageSetQuery $productImageSetToProductImageQuery
-     *
-     * @return \Orm\Zed\ProductImage\Persistence\SpyProductImageSetQuery
-     */
     protected function sortProductImageSetToProductImageQuery(
         SpyProductImageSetQuery $productImageSetToProductImageQuery
     ): SpyProductImageSetQuery {

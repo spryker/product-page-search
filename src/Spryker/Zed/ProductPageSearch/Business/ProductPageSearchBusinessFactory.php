@@ -79,9 +79,6 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\Publisher\ProductConcretePageSearchPublisherInterface
-     */
     public function createProductConcretePageSearchPublisher(): ProductConcretePageSearchPublisherInterface
     {
         return new ProductConcretePageSearchPublisher(
@@ -99,9 +96,6 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\Unpublisher\ProductConcretePageSearchUnpublisherInterface
-     */
     public function createProductConcretePageSearchUnpublisher(): ProductConcretePageSearchUnpublisherInterface
     {
         return new ProductConcretePageSearchUnpublisher(
@@ -110,9 +104,6 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\Writer\ProductAbstractPageSearchWriterInterface
-     */
     public function createProductAbstractPageSearchWriter(): ProductAbstractPageSearchWriterInterface
     {
         return new ProductAbstractPageSearchWriter(
@@ -123,9 +114,6 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\Reader\CategoryReaderInterface
-     */
     public function createCategoryReader(): CategoryReaderInterface
     {
         return new CategoryReader(
@@ -134,25 +122,16 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\ProductConcretePageSearchReader\ProductConcretePageSearchReaderInterface
-     */
     public function createProductConcretePageSearchReader(): ProductConcretePageSearchReaderInterface
     {
         return new ProductConcretePageSearchReader($this->getRepository());
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\ProductConcretePageSearchWriter\ProductConcretePageSearchWriterInterface
-     */
     public function createProductConcretePageSearchWriter(): ProductConcretePageSearchWriterInterface
     {
         return new ProductConcretePageSearchWriter($this->getEntityManager());
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\Expander\ProductConcretePageSearchExpanderInterface
-     */
     public function createProductConcretePageSearchExpander(): ProductConcretePageSearchExpanderInterface
     {
         return new ProductConcretePageSearchExpander(
@@ -168,9 +147,6 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PLUGINS_PRODUCT_CONCRETE_PAGE_DATA_EXPANDER);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\Refresher\ProductPageRefresherInterface
-     */
     public function createProductAbstractPageRefresher(): ProductPageRefresherInterface
     {
         return new ProductAbstractPageRefresher(
@@ -209,9 +185,6 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\Reader\AddToCartSkuReaderInterface
-     */
     public function createAddToCartSkuReader(): AddToCartSkuReaderInterface
     {
         return new AddToCartSkuReader(
@@ -220,9 +193,6 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\Writer\ProductConcretePageSearchByProductEventsWriterInterface
-     */
     public function createProductConcretePageSearchByProductEventsWriter(): ProductConcretePageSearchByProductEventsWriterInterface
     {
         return new ProductConcretePageSearchByProductEventsWriter(
@@ -267,17 +237,11 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::FACADE_SEARCH);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFacadeInterface
-     */
     public function getStoreFacade(): ProductPageSearchToStoreFacadeInterface
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::FACADE_STORE);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductImageFacadeInterface
-     */
     public function getProductImageFacade(): ProductPageSearchToProductImageFacadeInterface
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::FACADE_PRODUCT_IMAGE);
@@ -315,9 +279,6 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PLUGINS_PRODUCT_CONCRETE_COLLECTION_FILTER);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\DataMapper\AbstractProductSearchDataMapper
-     */
     public function createProductAbstractSearchDataMapper(): AbstractProductSearchDataMapper
     {
         return new ProductAbstractSearchDataMapper(
@@ -328,9 +289,6 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\DataMapper\AbstractProductSearchDataMapper
-     */
     public function createProductConcreteSearchDataMapper(): AbstractProductSearchDataMapper
     {
         return new ProductConcreteSearchDataMapper(
@@ -339,9 +297,6 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearchExtension\Dependency\PageMapBuilderInterface
-     */
     public function createPageMapBuilder(): PageMapBuilderInterface
     {
         return new PageMapBuilder();
@@ -371,41 +326,26 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PLUGINS_PRODUCT_ABSTRACT_MAP_EXPANDER);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\Expander\Elasticsearch\ProductPageMapCategoryExpanderInterface
-     */
     public function createProductPageMapCategoryExpander(): ProductPageMapCategoryExpanderInterface
     {
         return new ProductPageMapCategoryExpander();
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToPriceProductInterface
-     */
     public function getPriceProductFacade(): ProductPageSearchToPriceProductInterface
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::FACADE_PRICE_PRODUCT);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToEventBehaviorFacadeInterface
-     */
     public function getEventBehaviorFacade(): ProductPageSearchToEventBehaviorFacadeInterface
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::FACADE_EVENT_BEHAVIOR);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToCategoryInterface
-     */
     public function getCategoryFacade(): ProductPageSearchToCategoryInterface
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::FACADE_CATEGORY);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\Expander\PriceProductPageExpanderInterface
-     */
     public function createPriceProductPageExpander(): PriceProductPageExpanderInterface
     {
         return new PriceProductPageExpander(
@@ -422,9 +362,6 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PLUGINS_PRODUCT_ABSTRACT_ADD_TO_CART);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\Provider\ProductAbstractReadinessProviderInterface
-     */
     public function createPageSearchProductAbstractReadinessProvider(): ProductAbstractReadinessProviderInterface
     {
         return new PageSearchProductAbstractReadinessProvider(
@@ -434,17 +371,11 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Client\Search\SearchClientInterface
-     */
     protected function getSearchClient(): SearchClientInterface
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::CLIENT_SEARCH);
     }
 
-    /**
-     * @return \Spryker\Service\Synchronization\SynchronizationServiceInterface
-     */
     protected function getSynchronizationService(): SynchronizationServiceInterface
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::SERVICE_SYNCHRONIZATION);

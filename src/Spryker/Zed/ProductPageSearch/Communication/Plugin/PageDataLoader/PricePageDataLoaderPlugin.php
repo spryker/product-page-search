@@ -101,9 +101,6 @@ class PricePageDataLoaderPlugin extends AbstractPlugin implements ProductPageDat
         return $payloadTransfers;
     }
 
-    /**
-     * @return array
-     */
     protected function getStoreNameByIdMap(): array
     {
         $storeTransfers = $this->getFactory()->getStoreFacade()->getAllStores();

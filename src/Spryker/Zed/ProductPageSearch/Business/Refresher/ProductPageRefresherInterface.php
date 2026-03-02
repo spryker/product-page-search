@@ -9,8 +9,5 @@ namespace Spryker\Zed\ProductPageSearch\Business\Refresher;
 
 interface ProductPageRefresherInterface
 {
-    /**
-     * @return void
-     */
     public function refresh(): void;
 }

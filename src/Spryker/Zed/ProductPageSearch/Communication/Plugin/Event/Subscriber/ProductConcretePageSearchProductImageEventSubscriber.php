@@ -43,61 +43,31 @@ class ProductConcretePageSearchProductImageEventSubscriber extends AbstractPlugi
         return $eventCollection;
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageSearchProductImageProductConcretePublishListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductImageEvents::PRODUCT_IMAGE_PRODUCT_CONCRETE_PUBLISH, new ProductConcretePageSearchProductImageProductConcreteListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageSearchProductImageUpdateListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductImageEvents::ENTITY_SPY_PRODUCT_IMAGE_UPDATE, new ProductConcretePageSearchProductImageListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageSearchProductImageSetToProductImageCreateListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductImageEvents::ENTITY_SPY_PRODUCT_IMAGE_SET_TO_PRODUCT_IMAGE_CREATE, new ProductConcretePageSearchProductImageSetToProductImageListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageSearchProductImageSetToProductImageUpdateListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductImageEvents::ENTITY_SPY_PRODUCT_IMAGE_SET_TO_PRODUCT_IMAGE_UPDATE, new ProductConcretePageSearchProductImageSetToProductImageListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageSearchProductImageSetToProductImageDeleteListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductImageEvents::ENTITY_SPY_PRODUCT_IMAGE_SET_TO_PRODUCT_IMAGE_DELETE, new ProductConcretePageSearchProductImageSetToProductImageListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageSearchProductImageSetDeleteListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductImageEvents::ENTITY_SPY_PRODUCT_IMAGE_SET_DELETE, new ProductConcretePageSearchProductImageSetListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());

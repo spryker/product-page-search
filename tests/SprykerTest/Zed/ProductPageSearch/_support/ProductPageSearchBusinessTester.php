@@ -59,26 +59,17 @@ class ProductPageSearchBusinessTester extends Actor
      */
     protected $storeTransfers;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->addDependencies();
         $this->setUpData();
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\ProductConcreteTransfer
-     */
     public function getProductConcreteTransfer(): ProductConcreteTransfer
     {
         return $this->productConcreteTransfer;
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\ProductAbstractTransfer
-     */
     public function getProductAbstractTransfer(): ProductAbstractTransfer
     {
         return $this->productAbstractTransfer;
@@ -118,12 +109,6 @@ class ProductPageSearchBusinessTester extends Actor
             ->count();
     }
 
-    /**
-     * @param int $idProductAbstract
-     * @param string $storeName
-     *
-     * @return \Generated\Shared\Transfer\ProductPageSearchTransfer|null
-     */
     public function findProductPageSearchTransfer(int $idProductAbstract, string $storeName): ?ProductPageSearchTransfer
     {
         $productAbstractPageSearchEntity = $this->findProductAbstractPageSearch($idProductAbstract, $storeName);
@@ -140,11 +125,6 @@ class ProductPageSearchBusinessTester extends Actor
         return (new ProductPageSearchTransfer())->fromArray($decodedStructuredData);
     }
 
-    /**
-     * @param bool $isSearchable
-     *
-     * @return \Orm\Zed\ProductSearch\Persistence\SpyProductSearch
-     */
     public function getLocalizedProductSearchEntity(bool $isSearchable = true): SpyProductSearch
     {
         $productConcreteTransfer = $this->haveFullProduct();
@@ -158,13 +138,6 @@ class ProductPageSearchBusinessTester extends Actor
         );
     }
 
-    /**
-     * @param int $idLocale
-     * @param int $idProductConcrete
-     * @param bool $isSearchable
-     *
-     * @return \Orm\Zed\ProductSearch\Persistence\SpyProductSearch
-     */
     public function persistProductSearchEntity(int $idLocale, int $idProductConcrete, bool $isSearchable): SpyProductSearch
     {
         $productSearchEntity = (new SpyProductSearch())
@@ -177,11 +150,6 @@ class ProductPageSearchBusinessTester extends Actor
         return $productSearchEntity;
     }
 
-    /**
-     * @param \Orm\Zed\ProductSearch\Persistence\SpyProductSearch $productSearchEntity
-     *
-     * @return \Orm\Zed\ProductPageSearch\Persistence\SpyProductConcretePageSearch|null
-     */
     public function findProductConcretePageSearchEntityByLocalizedProductSearchEntity(SpyProductSearch $productSearchEntity): ?SpyProductConcretePageSearch
     {
         return SpyProductConcretePageSearchQuery::create()
@@ -190,25 +158,16 @@ class ProductPageSearchBusinessTester extends Actor
             ->findOne();
     }
 
-    /**
-     * @return \Spryker\Zed\Locale\Business\LocaleFacadeInterface
-     */
     public function getLocaleFacade(): LocaleFacadeInterface
     {
         return $this->getLocator()->locale()->facade();
     }
 
-    /**
-     * @return \Spryker\Zed\Store\Business\StoreFacadeInterface
-     */
     public function getStoreFacade(): StoreFacadeInterface
     {
         return $this->getLocator()->store()->facade();
     }
 
-    /**
-     * @return void
-     */
     protected function setUpData(): void
     {
         $this->productConcreteTransfer = $this->haveFullProduct();
@@ -231,9 +190,6 @@ class ProductPageSearchBusinessTester extends Actor
         );
     }
 
-    /**
-     * @return void
-     */
     protected function addDependencies(): void
     {
         $this->setDependency(QueueDependencyProvider::QUEUE_ADAPTERS, function (Container $container) {
@@ -246,9 +202,6 @@ class ProductPageSearchBusinessTester extends Actor
         $this->addPluginSearchPageMapsDependency();
     }
 
-    /**
-     * @return void
-     */
     protected function addPluginSearchPageMapsDependency(): void
     {
         $this->setDependency(SearchDependencyProvider::PLUGIN_SEARCH_PAGE_MAPS, function (ZedContainer $container) {
@@ -258,9 +211,6 @@ class ProductPageSearchBusinessTester extends Actor
         });
     }
 
-    /**
-     * @return array
-     */
     protected function getIdStores(): array
     {
         $storeIds = [];
@@ -274,11 +224,6 @@ class ProductPageSearchBusinessTester extends Actor
         return $storeIds;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductAbstractTransfer $productAbstractTransfer
-     *
-     * @return void
-     */
     protected function addStoreRelationToProductAbstracts(ProductAbstractTransfer $productAbstractTransfer): void
     {
         $idStores = $this->getIdStores();
@@ -301,9 +246,6 @@ class ProductPageSearchBusinessTester extends Actor
             ->findOneByFkProductAbstract($idProductAbstract);
     }
 
-    /**
-     * @return \Orm\Zed\ProductPageSearch\Persistence\SpyProductAbstractPageSearchQuery
-     */
     protected function getProductAbstractPageSearchPropelQuery(): SpyProductAbstractPageSearchQuery
     {
         return SpyProductAbstractPageSearchQuery::create();

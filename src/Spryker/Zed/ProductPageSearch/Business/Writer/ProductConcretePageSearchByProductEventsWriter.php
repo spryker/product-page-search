@@ -28,11 +28,6 @@ class ProductConcretePageSearchByProductEventsWriter implements ProductConcreteP
      */
     protected ProductPageSearchRepositoryInterface $productPageSearchRepository;
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Business\Publisher\ProductConcretePageSearchPublisherInterface $productConcretePageSearchPublisher
-     * @param \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToEventBehaviorFacadeInterface $eventBehaviorFacade
-     * @param \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepositoryInterface $productPageSearchRepository
-     */
     public function __construct(
         ProductConcretePageSearchPublisherInterface $productConcretePageSearchPublisher,
         ProductPageSearchToEventBehaviorFacadeInterface $eventBehaviorFacade,

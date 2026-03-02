@@ -42,9 +42,6 @@ class ProductPageSearchWriter implements ProductPageSearchWriterInterface
         $this->isSendingToQueue = $isSendingToQueue;
     }
 
-    /**
-     * @return void
-     */
     public function commitRemaining(): void
     {
         $this->commit();

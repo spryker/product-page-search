@@ -87,11 +87,6 @@ abstract class AbstractProductPageSearchListener extends AbstractPlugin implemen
         return $categoryNodeIds;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\HydrateEventsRequestTransfer $hydrateEventsRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\HydrateEventsResponseTransfer
-     */
     protected function hydrateEventDataTransfer(HydrateEventsRequestTransfer $hydrateEventsRequestTransfer): HydrateEventsResponseTransfer
     {
         return $this->getFactory()->getEventBehaviorFacade()->hydrateEventDataTransfer($hydrateEventsRequestTransfer);

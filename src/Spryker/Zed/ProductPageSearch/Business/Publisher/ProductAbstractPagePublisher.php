@@ -347,11 +347,6 @@ class ProductAbstractPagePublisher implements ProductAbstractPagePublisherInterf
         $this->productPageSearchWriter->save($productPageSearchTransfer, $searchDocument, $productAbstractPageSearchEntity);
     }
 
-    /**
-     * @param array $productAbstractLocalizedEntity
-     *
-     * @return bool
-     */
     protected function isActual(array $productAbstractLocalizedEntity): bool
     {
         foreach ($productAbstractLocalizedEntity['SpyProductAbstract']['SpyProducts'] as $spyProduct) {
@@ -363,12 +358,6 @@ class ProductAbstractPagePublisher implements ProductAbstractPagePublisherInterf
         return false;
     }
 
-    /**
-     * @param array $spyProduct
-     * @param int $idLocale
-     *
-     * @return bool
-     */
     protected function isSearchable(array $spyProduct, int $idLocale): bool
     {
         foreach ($spyProduct['SpyProductSearches'] as $spyProductSearch) {
@@ -401,11 +390,6 @@ class ProductAbstractPagePublisher implements ProductAbstractPagePublisherInterf
         return $this->productPageSearchMapper->mapToProductPageSearchTransfer($productAbstractLocalizedEntity);
     }
 
-    /**
-     * @param \Orm\Zed\ProductPageSearch\Persistence\SpyProductAbstractPageSearch $productAbstractPageSearchEntity
-     *
-     * @return \Generated\Shared\Transfer\ProductPageSearchTransfer
-     */
     protected function refreshProductPageSearchTransfer(
         SpyProductAbstractPageSearch $productAbstractPageSearchEntity
     ): ProductPageSearchTransfer {
@@ -547,12 +531,6 @@ class ProductAbstractPagePublisher implements ProductAbstractPagePublisherInterf
         );
     }
 
-    /**
-     * @param array $productSearchEntities
-     * @param array $productConcreteEntities
-     *
-     * @return array
-     */
     protected function hydrateProductConcreteEntitiesWithProductSearchEntities(array $productSearchEntities, array $productConcreteEntities): array
     {
         $productSearchByProductConcreteId = [];
@@ -592,12 +570,6 @@ class ProductAbstractPagePublisher implements ProductAbstractPagePublisherInterf
         return $productAbstractLocalizedEntities;
     }
 
-    /**
-     * @param array $productConcreteData
-     * @param array $productAbstractLocalizedEntities
-     *
-     * @return array
-     */
     protected function hydrateProductAbstractLocalizedEntitiesWithProductConcreteEntities(
         array $productConcreteData,
         array $productAbstractLocalizedEntities
@@ -747,12 +719,6 @@ class ProductAbstractPagePublisher implements ProductAbstractPagePublisherInterf
         return $productAbstractLocalizedEntities;
     }
 
-    /**
-     * @param array $pairedEntities
-     * @param bool $isRefresh
-     *
-     * @return array
-     */
     protected function mapPairedEntitiesToProductPageSearchTransfers(
         array $pairedEntities,
         bool $isRefresh

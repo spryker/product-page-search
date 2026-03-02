@@ -45,17 +45,11 @@ class ProductPageSearchPersistenceFactory extends AbstractPersistenceFactory
         return SpyProductAbstractPageSearchQuery::create();
     }
 
-    /**
-     * @return \Orm\Zed\ProductPageSearch\Persistence\SpyProductConcretePageSearchQuery
-     */
     public function createProductConcretePageSearchQuery(): SpyProductConcretePageSearchQuery
     {
         return SpyProductConcretePageSearchQuery::create();
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Persistence\Mapper\ProductPageSearchMapperInterface
-     */
     public function createProductPageSearchMapper(): ProductPageSearchMapperInterface
     {
         return new ProductPageSearchMapper();
@@ -103,57 +97,36 @@ class ProductPageSearchPersistenceFactory extends AbstractPersistenceFactory
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::QUERY_CONTAINER_CATEGORY);
     }
 
-    /**
-     * @return \Orm\Zed\Category\Persistence\SpyCategoryNodeQuery
-     */
     public function getCategoryNodeQueryContainer(): SpyCategoryNodeQuery
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PROPEL_QUERY_CATEGORY_NODE);
     }
 
-    /**
-     * @return \Orm\Zed\ProductImage\Persistence\SpyProductImageSetQuery
-     */
     public function getProductImageSetQuery(): SpyProductImageSetQuery
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PROPEL_QUERY_PRODUCT_IMAGE_SET);
     }
 
-    /**
-     * @return \Orm\Zed\Product\Persistence\SpyProductQuery
-     */
     public function getProductQuery(): SpyProductQuery
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PROPEL_QUERY_PRODUCT);
     }
 
-    /**
-     * @return \Orm\Zed\ProductCategory\Persistence\SpyProductCategoryQuery
-     */
     public function getProductCategoryQuery(): SpyProductCategoryQuery
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PROPEL_QUERY_PRODUCT_CATEGORY);
     }
 
-    /**
-     * @return \Orm\Zed\Category\Persistence\SpyCategoryClosureTableQuery
-     */
     public function getCategoryClosureTableQuery(): SpyCategoryClosureTableQuery
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PROPEL_QUERY_CATEGORY_CLOSURE_TABLE);
     }
 
-    /**
-     * @return \Orm\Zed\ProductSearch\Persistence\SpyProductSearchQuery
-     */
     public function getProductSearchQuery(): SpyProductSearchQuery
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PROPEL_QUERY_PRODUCT_SEARCH);
     }
 
-    /**
-     * @return \Orm\Zed\PriceProduct\Persistence\SpyPriceProductQuery
-     */
     public function getPriceProductPropelQuery(): SpyPriceProductQuery
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::PROPEL_QUERY_PRICE_PRODUCT);

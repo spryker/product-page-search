@@ -624,11 +624,6 @@ class ProductPageSearchEventSubscriber extends AbstractPlugin implements EventSu
         $eventCollection->addListenerQueued(ProductEvents::ENTITY_SPY_PRODUCT_ABSTRACT_STORE_DELETE, new ProductPageProductAbstractStoreSearchListener(), 0, null, $this->getConfig()->getProductPageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductSearchEvents(EventCollectionInterface $eventCollection): void
     {
         $eventCollection

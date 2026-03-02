@@ -68,11 +68,6 @@ class ProductPageSearchToPriceProductBridge implements ProductPageSearchToPriceP
         return $this->priceProductFacade->findProductAbstractPricesWithoutPriceExtractionByIdProductAbstractIn($productAbstractIds);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\PriceProductFilterTransfer $priceProductFilterTransfer
-     *
-     * @return \Generated\Shared\Transfer\PriceProductCriteriaTransfer
-     */
     public function buildCriteriaFromFilter(PriceProductFilterTransfer $priceProductFilterTransfer): PriceProductCriteriaTransfer
     {
         return $this->priceProductFacade->buildCriteriaFromFilter($priceProductFilterTransfer);

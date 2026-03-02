@@ -33,9 +33,6 @@ class ProductAbstractPageRefresher implements ProductPageRefresherInterface
         $this->productPageRefreshPlugins = $productPageRefreshPlugins;
     }
 
-    /**
-     * @return void
-     */
     public function refresh(): void
     {
         $productAbstractIds = [];

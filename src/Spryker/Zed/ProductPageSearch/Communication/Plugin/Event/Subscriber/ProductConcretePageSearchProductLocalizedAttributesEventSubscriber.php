@@ -37,31 +37,16 @@ class ProductConcretePageSearchProductLocalizedAttributesEventSubscriber extends
         return $eventCollection;
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageProductConcreteLocalizedAttributesCreateSearchListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductEvents::ENTITY_SPY_PRODUCT_LOCALIZED_ATTRIBUTES_CREATE, new ProductConcretePageSearchProductLocalizedAttributesListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageProductConcreteLocalizedAttributesUpdateSearchListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductEvents::ENTITY_SPY_PRODUCT_LOCALIZED_ATTRIBUTES_UPDATE, new ProductConcretePageSearchProductLocalizedAttributesListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageProductConcreteLocalizedAttributesDeleteSearchListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductEvents::ENTITY_SPY_PRODUCT_LOCALIZED_ATTRIBUTES_DELETE, new ProductConcretePageSearchProductLocalizedAttributesListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());

@@ -83,12 +83,6 @@ class ProductConcretePageSearchEventResourceBulkRepositoryPlugin extends Abstrac
         return static::COL_ID_PRODUCT_CONCRETE;
     }
 
-    /**
-     * @param int $offset
-     * @param int $limit
-     *
-     * @return \Generated\Shared\Transfer\FilterTransfer
-     */
     protected function createFilterTransfer(int $offset, int $limit): FilterTransfer
     {
         return (new FilterTransfer())

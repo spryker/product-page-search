@@ -318,14 +318,6 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
         $this->productConcretePageSearchWriter->saveProductConcretePageSearch($productConcretePageSearchTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcreteTransfer $productConcreteTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     * @param \Generated\Shared\Transfer\LocalizedAttributesTransfer $localizedAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConcretePageSearchTransfer
-     */
     protected function mapProductConcretePageSearchTransfer(
         ProductConcreteTransfer $productConcreteTransfer,
         StoreTransfer $storeTransfer,
@@ -356,14 +348,6 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
         return $productConcretePageSearchTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcreteTransfer $productConcreteTransfer
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     * @param \Generated\Shared\Transfer\LocalizedAttributesTransfer $localizedAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConcretePageSearchTransfer
-     */
     protected function mapProductConcreteTransferToProductConcretePageSearchTransfer(
         ProductConcreteTransfer $productConcreteTransfer,
         ProductConcretePageSearchTransfer $productConcretePageSearchTransfer,
@@ -385,11 +369,6 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
         return $productConcretePageSearchTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     *
-     * @return array
-     */
     protected function mapTransferToProductConcretePageSearchDocument(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): array
     {
         $productConcretePageSearchData = $productConcretePageSearchTransfer->toArray(true, true);
@@ -413,12 +392,6 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
         }
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcreteTransfer $productConcreteTransfer
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConcretePageSearchTransfer
-     */
     protected function expandProductConcretePageSearchTransferWithPlugins(
         ProductConcreteTransfer $productConcreteTransfer,
         ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
@@ -430,11 +403,6 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
         return $productConcretePageSearchTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     *
-     * @return string
-     */
     protected function getStructuredDataFromProductConcretePageSearchTransfer(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): string
     {
         $data = $productConcretePageSearchTransfer->toArray();
@@ -445,12 +413,6 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
         return $this->utilEncoding->encodeJson($data);
     }
 
-    /**
-     * @param string $storeName
-     * @param string $localeName
-     *
-     * @return bool
-     */
     protected function isValidStoreLocale(string $storeName, string $localeName): bool
     {
         return in_array($localeName, $this->storeFacade->getStoreByName($storeName)->getAvailableLocaleIsoCodes());

@@ -12,9 +12,6 @@ use Orm\Zed\ProductPageSearch\Persistence\SpyProductAbstractPageSearch;
 
 interface ProductPageSearchWriterInterface
 {
-    /**
-     * @return void
-     */
     public function commitRemaining(): void;
 
     /**

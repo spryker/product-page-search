@@ -50,12 +50,6 @@ class ProductAbstractPageSearchWriter implements ProductAbstractPageSearchWriter
      */
     protected CategoryReaderInterface $categoryReader;
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToEventBehaviorFacadeInterface $eventBehaviorFacade
-     * @param \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepositoryInterface $productPageSearchRepository
-     * @param \Spryker\Zed\ProductPageSearch\Business\Publisher\ProductAbstractPagePublisherInterface $productAbstractPagePublisher
-     * @param \Spryker\Zed\ProductPageSearch\Business\Reader\CategoryReaderInterface $categoryReader
-     */
     public function __construct(
         ProductPageSearchToEventBehaviorFacadeInterface $eventBehaviorFacade,
         ProductPageSearchRepositoryInterface $productPageSearchRepository,

@@ -40,11 +40,6 @@ abstract class AbstractProductConcretePageSearchListener extends AbstractPlugin 
         $this->getBusinessFactory()->createProductConcretePageSearchPublisher()->unpublishWithTimestamp($productIdTimestampMap);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\HydrateEventsRequestTransfer $hydrateEventsRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\HydrateEventsResponseTransfer
-     */
     protected function hydrateEventDataTransfer(HydrateEventsRequestTransfer $hydrateEventsRequestTransfer): HydrateEventsResponseTransfer
     {
         return $this->getFactory()->getEventBehaviorFacade()->hydrateEventDataTransfer($hydrateEventsRequestTransfer);

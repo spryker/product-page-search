@@ -26,21 +26,12 @@ class PriceProductPageExpander implements PriceProductPageExpanderInterface
      */
     protected $storeFacade;
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToPriceProductInterface $priceProductFacade
-     * @param \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFacadeInterface $storeFacade
-     */
     public function __construct(ProductPageSearchToPriceProductInterface $priceProductFacade, ProductPageSearchToStoreFacadeInterface $storeFacade)
     {
         $this->priceProductFacade = $priceProductFacade;
         $this->storeFacade = $storeFacade;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductPageLoadTransfer $productPageLoadTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductPageLoadTransfer
-     */
     public function expandProductPageLoadTransferWithPricesData(
         ProductPageLoadTransfer $productPageLoadTransfer
     ): ProductPageLoadTransfer {
@@ -131,9 +122,6 @@ class PriceProductPageExpander implements PriceProductPageExpanderInterface
         return $idStoreMap;
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\PriceProductCriteriaTransfer
-     */
     protected function getPriceCriteriaTransferForDefaultPriceDimension(): PriceProductCriteriaTransfer
     {
         return (new PriceProductCriteriaTransfer())

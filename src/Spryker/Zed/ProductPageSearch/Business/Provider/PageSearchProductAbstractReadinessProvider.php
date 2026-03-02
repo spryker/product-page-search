@@ -62,11 +62,6 @@ class PageSearchProductAbstractReadinessProvider implements ProductAbstractReadi
      */
     protected const DEFAULT_SOURCE_IDENTIFIER = 'page';
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFacadeInterface $storeFacade
-     * @param \Spryker\Client\Search\SearchClientInterface $searchClient
-     * @param \Spryker\Service\Synchronization\SynchronizationServiceInterface $synchronizationService
-     */
     public function __construct(
         protected ProductPageSearchToStoreFacadeInterface $storeFacade,
         protected SearchClientInterface $searchClient,
@@ -145,13 +140,6 @@ class PageSearchProductAbstractReadinessProvider implements ProductAbstractReadi
         return $availableLocales;
     }
 
-    /**
-     * @param int $idProductAbstract
-     * @param string $localeIsoCode
-     * @param string $storeName
-     *
-     * @return bool
-     */
     protected function hasProductDocument(int $idProductAbstract, string $localeIsoCode, string $storeName): bool
     {
         $documentKey = $this->buildProductAbstractDocumentKey($idProductAbstract, $storeName, $localeIsoCode);
@@ -159,13 +147,6 @@ class PageSearchProductAbstractReadinessProvider implements ProductAbstractReadi
         return $this->documentExists($documentKey, $storeName);
     }
 
-    /**
-     * @param int $idProductAbstract
-     * @param string $storeName
-     * @param string $localeName
-     *
-     * @return string
-     */
     protected function buildProductAbstractDocumentKey(int $idProductAbstract, string $storeName, string $localeName): string
     {
         $synchronizationDataTransfer = new SynchronizationDataTransfer();
@@ -179,12 +160,6 @@ class PageSearchProductAbstractReadinessProvider implements ProductAbstractReadi
         return $storageKeyBuilder->generateKey($synchronizationDataTransfer);
     }
 
-    /**
-     * @param string $documentKey
-     * @param string|null $storeName
-     *
-     * @return bool
-     */
     protected function documentExists(string $documentKey, ?string $storeName = null): bool
     {
         try {

@@ -17,29 +17,16 @@ class ProductConcretePageSearchWriter implements ProductConcretePageSearchWriter
      */
     protected $entityManager;
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchEntityManagerInterface $entityManager
-     */
     public function __construct(ProductPageSearchEntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConcretePageSearchTransfer
-     */
     public function saveProductConcretePageSearch(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): ProductConcretePageSearchTransfer
     {
         return $this->entityManager->saveProductConcretePageSearch($productConcretePageSearchTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     *
-     * @return bool
-     */
     public function deleteProductConcretePageSearch(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): bool
     {
         return $this->entityManager->deleteProductConcretePageSearch($productConcretePageSearchTransfer);

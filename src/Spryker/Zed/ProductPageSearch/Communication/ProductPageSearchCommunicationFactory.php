@@ -123,9 +123,6 @@ class ProductPageSearchCommunicationFactory extends AbstractCommunicationFactory
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::FACADE_STORE);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductInterface
-     */
     public function getProductFacade(): ProductPageSearchToProductInterface
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::FACADE_PRODUCT);
@@ -139,25 +136,16 @@ class ProductPageSearchCommunicationFactory extends AbstractCommunicationFactory
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::CLIENT_CATALOG_PRICE_PRODUCT_CONNECTOR);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Service\ProductPageSearchToPriceProductServiceInterface
-     */
     public function getPriceProductService(): ProductPageSearchToPriceProductServiceInterface
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::SERVICE_PRICE_PRODUCT);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToPriceFacadeInterface
-     */
     public function getPriceFacade(): ProductPageSearchToPriceFacadeInterface
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::FACADE_PRICE);
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductImageFacadeInterface
-     */
     public function getProductImageFacade(): ProductPageSearchToProductImageFacadeInterface
     {
         return $this->getProvidedDependency(ProductPageSearchDependencyProvider::FACADE_PRODUCT_IMAGE);

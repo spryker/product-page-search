@@ -32,11 +32,6 @@ class ProductPageSearchMapper implements ProductPageSearchMapperInterface
      */
     protected $utilEncoding;
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Business\Attribute\ProductPageAttributeInterface $productPageAttributes
-     * @param \Spryker\Zed\ProductPageSearch\Business\DataMapper\AbstractProductSearchDataMapper $productAbstractSearchDataMapper
-     * @param \Spryker\Zed\ProductPageSearch\Dependency\Service\ProductPageSearchToUtilEncodingInterface $utilEncoding
-     */
     public function __construct(
         ProductPageAttributeInterface $productPageAttributes,
         AbstractProductSearchDataMapper $productAbstractSearchDataMapper,
@@ -168,12 +163,6 @@ class ProductPageSearchMapper implements ProductPageSearchMapperInterface
         ];
     }
 
-    /**
-     * @param array $concreteProduct
-     * @param int $idLocale
-     *
-     * @return bool
-     */
     protected function isSearchable(array $concreteProduct, int $idLocale): bool
     {
         if (isset($concreteProduct['SpyProductSearches']) === false) {

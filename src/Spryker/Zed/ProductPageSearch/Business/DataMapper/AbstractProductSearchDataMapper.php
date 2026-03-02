@@ -242,12 +242,6 @@ abstract class AbstractProductSearchDataMapper
         return $result;
     }
 
-    /**
-     * @param array $result
-     * @param \Generated\Shared\Transfer\CategoryMapTransfer $categoryMap
-     *
-     * @return array
-     */
     protected function transformCategory(array $result, CategoryMapTransfer $categoryMap): array
     {
         $categoryMap

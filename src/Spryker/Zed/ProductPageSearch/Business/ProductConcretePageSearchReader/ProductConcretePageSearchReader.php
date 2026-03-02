@@ -16,9 +16,6 @@ class ProductConcretePageSearchReader implements ProductConcretePageSearchReader
      */
     protected $repository;
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepositoryInterface $repository
-     */
     public function __construct(ProductPageSearchRepositoryInterface $repository)
     {
         $this->repository = $repository;

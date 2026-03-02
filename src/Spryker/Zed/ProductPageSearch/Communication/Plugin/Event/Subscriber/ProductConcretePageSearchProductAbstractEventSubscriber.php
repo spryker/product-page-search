@@ -37,31 +37,16 @@ class ProductConcretePageSearchProductAbstractEventSubscriber extends AbstractPl
         return $eventCollection;
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageProductAbstractCreateListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductEvents::ENTITY_SPY_PRODUCT_ABSTRACT_CREATE, new ProductConcretePageSearchProductAbstractListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageProductAbstractUpdateListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductEvents::ENTITY_SPY_PRODUCT_ABSTRACT_UPDATE, new ProductConcretePageSearchProductAbstractListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageProductAbstractDeleteListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductEvents::ENTITY_SPY_PRODUCT_ABSTRACT_DELETE, new ProductConcretePageSearchProductAbstractListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());

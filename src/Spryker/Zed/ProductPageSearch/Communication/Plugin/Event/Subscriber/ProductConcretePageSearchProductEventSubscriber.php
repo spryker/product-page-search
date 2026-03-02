@@ -46,61 +46,31 @@ class ProductConcretePageSearchProductEventSubscriber extends AbstractPlugin imp
         return $eventCollection;
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageProductConcreteCreateSearchListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductEvents::ENTITY_SPY_PRODUCT_CREATE, new ProductConcretePageSearchProductListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageProductConcreteUpdateSearchListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductEvents::ENTITY_SPY_PRODUCT_UPDATE, new ProductConcretePageSearchProductListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageProductConcreteDeleteSearchListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductEvents::ENTITY_SPY_PRODUCT_DELETE, new ProductConcretePageSearchProductListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageProductConcretePublishSearchListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductEvents::PRODUCT_CONCRETE_PUBLISH, new ProductConcretePageSearchProductListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageProductConcreteUnpublishSearchListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(ProductEvents::PRODUCT_CONCRETE_UNPUBLISH, new ProductConcretePageSearchProductListener(), 0, null, $this->getConfig()->getProductConcretePageEventQueueName());
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageSearchCreateProductAbstractStoreListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(
@@ -112,11 +82,6 @@ class ProductConcretePageSearchProductEventSubscriber extends AbstractPlugin imp
         );
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageSearchUpdateProductAbstractStoreListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(
@@ -128,11 +93,6 @@ class ProductConcretePageSearchProductEventSubscriber extends AbstractPlugin imp
         );
     }
 
-    /**
-     * @param \Spryker\Zed\Event\Dependency\EventCollectionInterface $eventCollection
-     *
-     * @return void
-     */
     protected function addProductConcretePageSearchDeleteProductAbstractStoreListener(EventCollectionInterface $eventCollection): void
     {
         $eventCollection->addListenerQueued(

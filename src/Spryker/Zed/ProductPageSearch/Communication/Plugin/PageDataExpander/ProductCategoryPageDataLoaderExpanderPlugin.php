@@ -111,11 +111,6 @@ class ProductCategoryPageDataLoaderExpanderPlugin extends AbstractPlugin impleme
         return static::$categoryTree[$idCategoryNode];
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
-     *
-     * @return void
-     */
     protected function loadTree(LocaleTransfer $localeTransfer): void
     {
         static::$categoryTree = [];
@@ -253,11 +248,6 @@ class ProductCategoryPageDataLoaderExpanderPlugin extends AbstractPlugin impleme
         $productAbstractPageSearchTransfer->setSortedCategories($sortedCategories);
     }
 
-    /**
-     * @param array $categoryNodeData
-     *
-     * @return array
-     */
     protected function mapCategoryNodesWithLocaleIdAndNodeId(array $categoryNodeData): array
     {
         $categoryNodesMap = [];

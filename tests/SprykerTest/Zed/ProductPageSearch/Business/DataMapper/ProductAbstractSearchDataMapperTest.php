@@ -58,25 +58,16 @@ class ProductAbstractSearchDataMapperTest extends Unit
         $this->assertEquals($expected, $result);
     }
 
-    /**
-     * @return array
-     */
     public function canMapRawDataToSearchDataProvider(): array
     {
         return require codecept_data_dir('Fixtures/SearchDataMap/product_abstract_page_data_map_data_provider.php');
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToSearchInterface
-     */
     public function getSearchFacade(): ProductPageSearchToSearchInterface
     {
         return new ProductPageSearchToSearchBridge($this->tester->getLocator()->search()->facade());
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductSearchInterface
-     */
     protected function getProductSearchFacade(): ProductPageSearchToProductSearchInterface
     {
         return new ProductPageSearchToProductSearchBridge($this->tester->getLocator()->productSearch()->facade());

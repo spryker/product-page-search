@@ -408,11 +408,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addCategoryNodePropelQuery(Container $container): Container
     {
         $container->set(static::PROPEL_QUERY_CATEGORY_NODE, $container->factory(function () {
@@ -422,11 +417,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductImageSetPropelQuery(Container $container): Container
     {
         $container->set(static::PROPEL_QUERY_PRODUCT_IMAGE_SET, $container->factory(function () {
@@ -436,11 +426,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductPropelQuery(Container $container): Container
     {
         $container->set(static::PROPEL_QUERY_PRODUCT, $container->factory(function () {
@@ -450,11 +435,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductCategoryPropelQuery(Container $container): Container
     {
         $container->set(static::PROPEL_QUERY_PRODUCT_CATEGORY, $container->factory(function () {
@@ -464,11 +444,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addCategoryClosureTablePropelQuery(Container $container): Container
     {
         $container->set(static::PROPEL_QUERY_CATEGORY_CLOSURE_TABLE, $container->factory(function () {
@@ -478,11 +453,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addPriceProductService(Container $container): Container
     {
         $container->set(static::SERVICE_PRICE_PRODUCT, function (Container $container): ProductPageSearchToPriceProductServiceInterface {
@@ -494,11 +464,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addPriceFacade(Container $container): Container
     {
         $container->set(static::FACADE_PRICE, function (Container $container): ProductPageSearchToPriceFacadeInterface {
@@ -508,11 +473,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addCategoryFacade(Container $container): Container
     {
         $container->set(static::FACADE_CATEGORY, function (Container $container) {
@@ -522,11 +482,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductImageFacade(Container $container): Container
     {
         $container->set(static::FACADE_PRODUCT_IMAGE, function (Container $container) {
@@ -536,11 +491,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addStoreFacade(Container $container): Container
     {
         $container->set(static::FACADE_STORE, function (Container $container): ProductPageSearchToStoreFacadeInterface {
@@ -550,11 +500,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addEventBehaviorFacade(Container $container): Container
     {
         $container->set(static::FACADE_EVENT_BEHAVIOR, function (Container $container) {
@@ -564,11 +509,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductSearchPropelQuery(Container $container): Container
     {
         $container->set(static::PROPEL_QUERY_PRODUCT_SEARCH, $container->factory(function () {
@@ -638,11 +578,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductSearchFacade(Container $container): Container
     {
         $container->set(static::FACADE_PRODUCT_SEARCH, function (Container $container) {
@@ -652,11 +587,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductConcreteMapExpanderPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_CONCRETE_PRODUCT_MAP_EXPANDER, function () {
@@ -666,11 +596,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductAbstractMapExpanderPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_PRODUCT_ABSTRACT_MAP_EXPANDER, function () {
@@ -688,11 +613,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductAbstractAddToCartPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_PRODUCT_ABSTRACT_ADD_TO_CART, function () {
@@ -702,11 +622,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductPageRefreshPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_PRODUCT_PAGE_REFRESH, function () {
@@ -724,11 +639,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addPriceProductPropelQuery(Container $container): Container
     {
         $container->set(static::PROPEL_QUERY_PRICE_PRODUCT, $container->factory(function () {
@@ -738,11 +648,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addPriceProductFacade(Container $container): Container
     {
         $container->set(static::FACADE_PRICE_PRODUCT, function (Container $container) {
@@ -760,11 +665,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductConcreteCollectionFilterPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_PRODUCT_CONCRETE_COLLECTION_FILTER, function () {
@@ -782,11 +682,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addProductPageSearchCollectionFilterPlugins(Container $container): Container
     {
         $container->set(static::PLUGINS_PRODUCT_PAGE_SEARCH_COLLECTION_FILTER, function () {
@@ -804,11 +699,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addSearchClient(Container $container): Container
     {
         $container->set(static::CLIENT_SEARCH, function (Container $container): SearchClientInterface {
@@ -818,11 +708,6 @@ class ProductPageSearchDependencyProvider extends AbstractBundleDependencyProvid
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addSynchronizationService(Container $container): Container
     {
         $container->set(static::SERVICE_SYNCHRONIZATION, function (Container $container): SynchronizationServiceInterface {

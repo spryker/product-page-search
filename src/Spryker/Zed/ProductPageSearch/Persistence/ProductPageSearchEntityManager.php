@@ -15,11 +15,6 @@ use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
  */
 class ProductPageSearchEntityManager extends AbstractEntityManager implements ProductPageSearchEntityManagerInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConcretePageSearchTransfer
-     */
     public function saveProductConcretePageSearch(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): ProductConcretePageSearchTransfer
     {
         $productConcreteSearchPageEntity = $this->getFactory()
@@ -38,11 +33,6 @@ class ProductPageSearchEntityManager extends AbstractEntityManager implements Pr
             ->mapProductConcretePageSearchEntityToTransfer($productConcreteSearchPageEntity, $productConcretePageSearchTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     *
-     * @return bool
-     */
     public function deleteProductConcretePageSearch(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): bool
     {
         $productConcreteSearchPageEntity = $this->getFactory()

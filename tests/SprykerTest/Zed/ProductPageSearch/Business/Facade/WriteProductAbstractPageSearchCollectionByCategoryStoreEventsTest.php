@@ -52,9 +52,6 @@ class WriteProductAbstractPageSearchCollectionByCategoryStoreEventsTest extends 
      */
     protected ProductPageSearchBusinessTester $tester;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -78,9 +75,6 @@ class WriteProductAbstractPageSearchCollectionByCategoryStoreEventsTest extends 
         ));
     }
 
-    /**
-     * @return void
-     */
     public function testWriteProductAbstractPageSearchCollectionByCategoryStoreEventsWritesDataByEvents(): void
     {
         if ($this->tester->isDynamicStoreEnabled()) {
@@ -104,9 +98,6 @@ class WriteProductAbstractPageSearchCollectionByCategoryStoreEventsTest extends 
         $this->assertNotNull($productPageSearchTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testExecutesProductPageSearchCollectionFilterPlugins(): void
     {
         // Arrange
@@ -127,9 +118,6 @@ class WriteProductAbstractPageSearchCollectionByCategoryStoreEventsTest extends 
         $this->tester->getFacade()->writeProductAbstractPageSearchCollectionByCategoryStoreEvents([$eventEntityTransfer]);
     }
 
-    /**
-     * @return \Generated\Shared\Transfer\CategoryTransfer
-     */
     protected function createCategory(): CategoryTransfer
     {
         $storeTransfer = $this->tester->haveStore([StoreTransfer::NAME => static::STORE_NAME]);

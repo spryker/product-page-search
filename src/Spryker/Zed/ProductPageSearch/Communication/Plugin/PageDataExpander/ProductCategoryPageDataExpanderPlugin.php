@@ -91,9 +91,6 @@ class ProductCategoryPageDataExpanderPlugin extends AbstractPlugin implements Pr
         return static::$categoryTree[$idCategoryNode];
     }
 
-    /**
-     * @return void
-     */
     protected function loadTree(): void
     {
         static::$categoryTree = [];

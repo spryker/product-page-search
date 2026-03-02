@@ -73,13 +73,6 @@ class PricePageDataLoaderExpanderPlugin extends AbstractPlugin implements Produc
         return $prices[$storeName] ?? [];
     }
 
-    /**
-     * @param array $prices
-     * @param string $productAbstractSku
-     * @param string $storeName
-     *
-     * @return int
-     */
     protected function resolveProductPrice(array $prices, string $productAbstractSku, string $storeName): int
     {
         $priceProductCriteriaTransfer = $this->createPriceProductCriteriaTransfer($storeName, $productAbstractSku);
@@ -101,12 +94,6 @@ class PricePageDataLoaderExpanderPlugin extends AbstractPlugin implements Produc
         return $price->getMoneyValue()->getNetAmount();
     }
 
-    /**
-     * @param string $storeName
-     * @param string $productAbstractSku
-     *
-     * @return \Generated\Shared\Transfer\PriceProductCriteriaTransfer
-     */
     protected function createPriceProductCriteriaTransfer(string $storeName, string $productAbstractSku): PriceProductCriteriaTransfer
     {
         $priceFilter = (new PriceProductFilterTransfer())

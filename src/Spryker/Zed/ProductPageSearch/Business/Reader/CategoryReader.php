@@ -22,10 +22,6 @@ class CategoryReader implements CategoryReaderInterface
      */
     protected ProductPageSearchRepositoryInterface $productPageSearchRepository;
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToCategoryInterface $categoryFacade
-     * @param \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepositoryInterface $productPageSearchRepository
-     */
     public function __construct(
         ProductPageSearchToCategoryInterface $categoryFacade,
         ProductPageSearchRepositoryInterface $productPageSearchRepository

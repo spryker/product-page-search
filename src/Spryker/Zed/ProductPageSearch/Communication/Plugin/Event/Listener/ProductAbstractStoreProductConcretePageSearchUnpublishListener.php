@@ -41,11 +41,6 @@ class ProductAbstractStoreProductConcretePageSearchUnpublishListener extends Abs
         $this->getFacade()->unpublishProductConcretePageSearches($productAbstractStoreMap);
     }
 
-    /**
-     * @param array $storesPerAbstractProducts
-     *
-     * @return array
-     */
     protected function convertStoresPerAbstractProductsToStoreNames(array $storesPerAbstractProducts): array
     {
         $storeNameByIdMap = $this->getStoreNameByIdMap();
@@ -61,9 +56,6 @@ class ProductAbstractStoreProductConcretePageSearchUnpublishListener extends Abs
         return $storesPerAbstractProducts;
     }
 
-    /**
-     * @return array
-     */
     protected function getStoreNameByIdMap(): array
     {
         $storeTransfers = $this->getFactory()->getStoreFacade()->getAllStores();

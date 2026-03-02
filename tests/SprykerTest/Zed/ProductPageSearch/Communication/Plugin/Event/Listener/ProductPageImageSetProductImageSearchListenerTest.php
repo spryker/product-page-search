@@ -53,9 +53,6 @@ class ProductPageImageSetProductImageSearchListenerTest extends Unit
      */
     protected ProductPageSearchCommunicationTester $tester;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -77,9 +74,6 @@ class ProductPageImageSetProductImageSearchListenerTest extends Unit
         ));
     }
 
-    /**
-     * @return void
-     */
     public function testPublishesData(): void
     {
         if ($this->tester->isDynamicStoreEnabled()) {

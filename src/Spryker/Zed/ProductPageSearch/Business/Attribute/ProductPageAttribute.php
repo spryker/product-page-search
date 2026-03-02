@@ -17,9 +17,6 @@ class ProductPageAttribute implements ProductPageAttributeInterface
      */
     protected $productFacade;
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductInterface $productFacade
-     */
     public function __construct(ProductPageSearchToProductInterface $productFacade)
     {
         $this->productFacade = $productFacade;

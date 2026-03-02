@@ -27,9 +27,6 @@ class ProductPageSearchRepositoryTest extends Unit
      */
     protected $tester;
 
-    /**
-     * @return void
-     */
     public function testGetEligibleForAddToCartProductAbstractsIdsReturnsCorrectProductAbstractIds(): void
     {
         // Arrange

@@ -34,9 +34,6 @@ use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFaca
  */
 class PageSearchProductAbstractReadinessProviderPluginTest extends Unit
 {
-    /**
-     * @return void
-     */
     public function testProvideFormatsStoresAndLocales(): void
     {
         // Arrange
@@ -67,9 +64,6 @@ class PageSearchProductAbstractReadinessProviderPluginTest extends Unit
         $this->assertSame('DE: de_DE | US: en_US', $productReadiness->getValues()[0]);
     }
 
-    /**
-     * @return void
-     */
     public function testProvideReturnsDashWhenNoStoresProvided(): void
     {
         // Arrange
@@ -89,9 +83,6 @@ class PageSearchProductAbstractReadinessProviderPluginTest extends Unit
         $this->assertSame('-', $result[0]->getValues()[0]);
     }
 
-    /**
-     * @return void
-     */
     public function testProvideHandlesPartialLocaleCoverage(): void
     {
         // Arrange
@@ -119,13 +110,6 @@ class PageSearchProductAbstractReadinessProviderPluginTest extends Unit
         $this->assertSame('DE: de_DE | US: -', $result[0]->getValues()[0]);
     }
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFacadeInterface $storeFacadeMock
-     * @param \Spryker\Client\Search\SearchClientInterface $searchClientMock
-     * @param \Spryker\Service\Synchronization\SynchronizationServiceInterface $synchronizationServiceMock
-     *
-     * @return \Spryker\Zed\ProductPageSearch\Communication\Plugin\ProductManagement\PageSearchProductAbstractReadinessProviderPlugin
-     */
     protected function createPluginWithMocks(
         ProductPageSearchToStoreFacadeInterface $storeFacadeMock,
         SearchClientInterface $searchClientMock,

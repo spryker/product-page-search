@@ -48,9 +48,6 @@ class ProductPageSearchFacadeTest extends Unit
      */
     protected ProductPageSearchFacadeInterface $productPageSearchFacade;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -59,9 +56,6 @@ class ProductPageSearchFacadeTest extends Unit
         $this->productPageSearchFacade = new ProductPageSearchFacade();
     }
 
-    /**
-     * @return void
-     */
     public function testUnpublishProductConcretePageSearches(): void
     {
         $productAbstractTransfer = $this->tester->getProductAbstractTransfer();
@@ -107,9 +101,6 @@ class ProductPageSearchFacadeTest extends Unit
         }
     }
 
-    /**
-     * @return void
-     */
     public function testPublishProductAbstractPageShouldNotPublishToSearchWithoutStoreConnection(): void
     {
         // Arrange
@@ -124,9 +115,6 @@ class ProductPageSearchFacadeTest extends Unit
         $this->assertSame(0, $productAbstractPageSearchCount);
     }
 
-    /**
-     * @return void
-     */
     public function testExpandProductConcretePageSearchTransferWithProductImagesExpandsDataWithProductImages(): void
     {
         // Arrange
@@ -153,9 +141,6 @@ class ProductPageSearchFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
     public function testExpandProductConcretePageSearchTransferWithProductImagesExpandsProductWithoutImages(): void
     {
         // Arrange
@@ -174,9 +159,6 @@ class ProductPageSearchFacadeTest extends Unit
         $this->assertEmpty($expandedProductConcretePageSearchTransfer->getImages());
     }
 
-    /**
-     * @return void
-     */
     public function testExpandProductConcretePageSearchTransferWithProductImagesExpandsProductWithoutLocale(): void
     {
         // Arrange
@@ -202,9 +184,6 @@ class ProductPageSearchFacadeTest extends Unit
         $this->assertEmpty($expandedProductConcretePageSearchTransfer->getImages());
     }
 
-    /**
-     * @return void
-     */
     public function testExpandProductConcretePageSearchTransferWithProductImagesExpandsProductWithoutRequiredLocaleField(): void
     {
         // Arrange
@@ -220,9 +199,6 @@ class ProductPageSearchFacadeTest extends Unit
             ->expandProductConcretePageSearchTransferWithProductImages($productConcretePageSearchTransfer);
     }
 
-    /**
-     * @return void
-     */
     public function testExpandProductConcretePageSearchTransferWithProductImagesExpandsProductWithoutRequiredIdProductField(): void
     {
         // Arrange
@@ -270,9 +246,6 @@ class ProductPageSearchFacadeTest extends Unit
         $this->assertEquals($expectedPageMapTransfer->toArray(true), $actualPageMapTransfer->toArray(true));
     }
 
-    /**
-     * @return array
-     */
     public function expandProductPageMapWithCategoryDataDataProvider(): array
     {
         return [
@@ -281,9 +254,6 @@ class ProductPageSearchFacadeTest extends Unit
         ];
     }
 
-    /**
-     * @return void
-     */
     public function testRefreshProductAbstractPage(): void
     {
         // Arrange
@@ -320,9 +290,6 @@ class ProductPageSearchFacadeTest extends Unit
         $this->productPageSearchFacade->refreshProductAbstractPage();
     }
 
-    /**
-     * @return void
-     */
     public function testWriteProductConcretePageSearchCollectionByProductEventsWritesSearchDataForSearchableProduct(): void
     {
         // Arrange
@@ -337,9 +304,6 @@ class ProductPageSearchFacadeTest extends Unit
         $this->assertNotNull($productConcretePageSearchEntity, 'ProductConcretePageSearchEntity should exist.');
     }
 
-    /**
-     * @return void
-     */
     public function testWriteProductConcretePageSearchCollectionByProductEventsDoesntWriteSearchDataForNotSearchableProduct(): void
     {
         // Arrange
@@ -354,9 +318,6 @@ class ProductPageSearchFacadeTest extends Unit
         $this->assertNull($productConcretePageSearchEntity, 'ProductConcretePageSearchEntity shouldn\'t exist.');
     }
 
-    /**
-     * @return array
-     */
     protected function getDataWithDifferentParentCategories(): array
     {
         $productData = [
@@ -410,9 +371,6 @@ class ProductPageSearchFacadeTest extends Unit
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function getDataWithParentCategoriesIntersected(): array
     {
         $productData = [
@@ -468,9 +426,6 @@ class ProductPageSearchFacadeTest extends Unit
         ];
     }
 
-    /**
-     * @return \Spryker\Zed\ProductPageSearch\Business\DataMapper\PageMapBuilder
-     */
     protected function createPageMapBuilder(): PageMapBuilder
     {
         return new PageMapBuilder();

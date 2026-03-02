@@ -25,10 +25,6 @@ class ProductConcretePageSearchUnpublisher implements ProductConcretePageSearchU
      */
     protected $productConcretePageSearchWriter;
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Business\ProductConcretePageSearchReader\ProductConcretePageSearchReaderInterface $productConcretePageSearchReader
-     * @param \Spryker\Zed\ProductPageSearch\Business\ProductConcretePageSearchWriter\ProductConcretePageSearchWriterInterface $productConcretePageSearchWriter
-     */
     public function __construct(
         ProductConcretePageSearchReaderInterface $productConcretePageSearchReader,
         ProductConcretePageSearchWriterInterface $productConcretePageSearchWriter

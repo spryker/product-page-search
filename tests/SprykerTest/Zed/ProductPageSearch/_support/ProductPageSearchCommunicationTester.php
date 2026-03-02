@@ -87,12 +87,6 @@ class ProductPageSearchCommunicationTester extends Actor
             ->findOneByFkProductAbstract($idProductAbstract);
     }
 
-    /**
-     * @param int $idProductAbstract
-     * @param string $storeName
-     *
-     * @return \Generated\Shared\Transfer\ProductPageSearchTransfer|null
-     */
     public function findProductPageSearchTransfer(int $idProductAbstract, string $storeName): ?ProductPageSearchTransfer
     {
         $productAbstractPageSearchEntity = $this->findProductAbstractPageSearch($idProductAbstract, $storeName);
@@ -106,19 +100,11 @@ class ProductPageSearchCommunicationTester extends Actor
         return (new ProductPageSearchTransfer())->fromArray($decodedStructuredData);
     }
 
-    /**
-     * @return \Orm\Zed\ProductPageSearch\Persistence\SpyProductAbstractPageSearchQuery
-     */
     protected function getProductAbstractPageSearchPropelQuery(): SpyProductAbstractPageSearchQuery
     {
         return SpyProductAbstractPageSearchQuery::create();
     }
 
-    /**
-     * @param int $isAbstractProduct
-     *
-     * @return int|null
-     */
     public function getProductAbstractPageSearchEntityTimestamp(int $isAbstractProduct): ?int
     {
         $spyProductAbstractPageSearchEntity = SpyProductAbstractPageSearchQuery::create()->findOneByFkProductAbstract($isAbstractProduct);
@@ -126,11 +112,6 @@ class ProductPageSearchCommunicationTester extends Actor
         return $spyProductAbstractPageSearchEntity ? $spyProductAbstractPageSearchEntity->getUpdatedAt()->getTimestamp() : null;
     }
 
-    /**
-     * @param int $isProductConcrete
-     *
-     * @return int|null
-     */
     public function getProductConcreteStorageEntityTimestamp(int $isProductConcrete): ?int
     {
         $spyProductConcretePageSearchEntity = SpyProductConcretePageSearchQuery::create()->findOneByFkProduct($isProductConcrete);

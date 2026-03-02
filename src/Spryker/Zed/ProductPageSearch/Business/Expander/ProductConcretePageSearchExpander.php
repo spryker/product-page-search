@@ -24,19 +24,11 @@ class ProductConcretePageSearchExpander implements ProductConcretePageSearchExpa
      */
     protected $productImageFacade;
 
-    /**
-     * @param \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductImageFacadeInterface $productImageFacade
-     */
     public function __construct(ProductPageSearchToProductImageFacadeInterface $productImageFacade)
     {
         $this->productImageFacade = $productImageFacade;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     *
-     * @return \Generated\Shared\Transfer\ProductConcretePageSearchTransfer
-     */
     public function expandProductConcretePageSearchTransferWithProductImages(
         ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
     ): ProductConcretePageSearchTransfer {
@@ -76,11 +68,6 @@ class ProductConcretePageSearchExpander implements ProductConcretePageSearchExpa
         return static::$imageSetCollectionsResolved[$idProduct];
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\ProductImageSetTransfer $productImageSetTransfer
-     *
-     * @return array
-     */
     protected function mapImageSetTransferToImages(ProductImageSetTransfer $productImageSetTransfer): array
     {
         $images = [];
