@@ -214,13 +214,25 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
         );
 
         foreach ($productConcreteTransfers as $productConcreteTransfer) {
+            $localizedAttributesTransfers = [];
+            foreach ($productConcreteTransfer->getLocalizedAttributes() as $localizedAttributesTransfer) {
+                $localizedAttributesTransfers[$localizedAttributesTransfer->getLocale()->getLocaleName()] = $localizedAttributesTransfer;
+            }
             foreach ($productConcreteTransfer->getStores() as $storeTransfer) {
-                $this->syncProductConcretePageSearchPerStore(
-                    $productConcreteTransfer,
-                    $storeTransfer,
-                    $productConcretePageSearchTransfers[$productConcreteTransfer->getIdProductConcrete()][$storeTransfer->getName()] ?? [],
-                    $filteredProductIds,
-                );
+                $storeTransfer = $this->storeFacade->getStoreByName($storeTransfer->getName());
+                foreach ($storeTransfer->getAvailableLocaleIsoCodes() as $localeIsoCode) {
+                    if (!isset($localizedAttributesTransfers[$localeIsoCode])) {
+                        continue;
+                    }
+                    $localizedAttributesTransfer = $localizedAttributesTransfers[$localeIsoCode];
+                    $this->syncProductConcretePageSearchPerLocale(
+                        $productConcreteTransfer,
+                        $storeTransfer,
+                        $productConcretePageSearchTransfers[$productConcreteTransfer->getIdProductConcrete()][$storeTransfer->getName()][$localizedAttributesTransfer->getLocale()->getLocaleName()] ?? new ProductConcretePageSearchTransfer(),
+                        $localizedAttributesTransfer,
+                        $filteredProductIds,
+                    );
+                }
             }
         }
     }
@@ -234,31 +246,6 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
     {
         foreach ($productConcretePageSearchTransfers as $productConcretePageSearchTransfer) {
             $this->deleteProductConcretePageSearch($productConcretePageSearchTransfer);
-        }
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\ProductConcreteTransfer $productConcreteTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     * @param array<\Generated\Shared\Transfer\ProductConcretePageSearchTransfer> $localizedProductConcretePageSearchTransfers
-     * @param array<int> $filteredProductIds
-     *
-     * @return void
-     */
-    protected function syncProductConcretePageSearchPerStore(
-        ProductConcreteTransfer $productConcreteTransfer,
-        StoreTransfer $storeTransfer,
-        array $localizedProductConcretePageSearchTransfers,
-        array $filteredProductIds
-    ): void {
-        foreach ($productConcreteTransfer->getLocalizedAttributes() as $localizedAttributesTransfer) {
-            $this->syncProductConcretePageSearchPerLocale(
-                $productConcreteTransfer,
-                $storeTransfer,
-                $localizedProductConcretePageSearchTransfers[$localizedAttributesTransfer->getLocale()->getLocaleName()] ?? new ProductConcretePageSearchTransfer(),
-                $localizedAttributesTransfer,
-                $filteredProductIds,
-            );
         }
     }
 
