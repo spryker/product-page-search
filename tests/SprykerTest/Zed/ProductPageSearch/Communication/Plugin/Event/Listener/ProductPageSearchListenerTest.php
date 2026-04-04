@@ -185,21 +185,18 @@ class ProductPageSearchListenerTest extends Unit
     {
         // Assert
         SpyProductAbstractPageSearchQuery::create()->filterByFkProductAbstract($this->productAbstractTransfer->getIdProductAbstract())->delete();
-        $productPageSearchFacadeMock = $this->tester->mockProductPageSearchFacade();
-        $productPageSearchFacadeMock->expects($this->once())
-            ->method('publish')
-            ->with([$this->productAbstractTransfer->getIdProductAbstract(), 1234]);
-        $productPageSearchFacadeMock->expects($this->once())
-            ->method('unpublish')
-            ->with([$this->productAbstractTransfer->getIdProductAbstract(), 1234]);
+        $productAbstractPagePublisherMock = $this->tester->createProductAbstractPagePublisherMock();
+        $productAbstractPagePublisherMock->method('publishWithTimestamps')->with([$this->productAbstractTransfer->getIdProductAbstract() => 0, 1234 => 0]);
+        $productAbstractPagePublisherMock->method('unpublishWithTimestamps')->with([$this->productAbstractTransfer->getIdProductAbstract() => 0, 1234 => 0]);
+        $this->tester->mockFactoryMethod('createProductAbstractPagePublisher', $productAbstractPagePublisherMock);
         $productPageProductAbstractPublishListener = new ProductPageProductAbstractPublishListener();
-        $productPageProductAbstractPublishListener->setFacade($productPageSearchFacadeMock);
+        $productPageProductAbstractPublishListener->setBusinessFactory($this->tester->getFactory());
         $productPageCategoryNodeSearchListener = new ProductPageCategoryNodeSearchListener();
-        $productPageCategoryNodeSearchListener->setFacade($productPageSearchFacadeMock);
+        $productPageCategoryNodeSearchListener->setBusinessFactory($this->tester->getFactory());
         $productPageProductAbstractUnpublishListener = new ProductPageProductAbstractUnpublishListener();
-        $productPageProductAbstractUnpublishListener->setFacade($productPageSearchFacadeMock);
+        $productPageProductAbstractUnpublishListener->setBusinessFactory($this->tester->getFactory());
         $productPageProductAbstractListener = new ProductPageProductAbstractListener();
-        $productPageProductAbstractListener->setFacade($productPageSearchFacadeMock);
+        $productPageProductAbstractListener->setBusinessFactory($this->tester->getFactory());
 
         $eventTransfers = [
             (new EventEntityTransfer())->setId($this->productAbstractTransfer->getIdProductAbstract()),
@@ -220,19 +217,13 @@ class ProductPageSearchListenerTest extends Unit
     {
         // Assert
         SpyProductAbstractPageSearchQuery::create()->filterByFkProductAbstract($this->productConcreteTransfer->getIdProductConcrete())->delete();
-        $productPageSearchFacadeMock = $this->tester->mockProductPageSearchFacade();
-        $productPageSearchFacadeMock->expects($this->once())
-            ->method('publishProductConcretes')
-            ->with([$this->productConcreteTransfer->getIdProductConcrete(), 1234]);
-        $productPageSearchFacadeMock->expects($this->once())
-            ->method('unpublishProductConcretes')
-            ->with([$this->productConcreteTransfer->getIdProductConcrete(), 1234]);
+        $productAbstractPagePublisherMock = $this->tester->createProductAbstractPagePublisherMock();
+        $productAbstractPagePublisherMock->method('publishWithTimestamps')->with([$this->productAbstractTransfer->getIdProductAbstract(), 1234]);
+        $productAbstractPagePublisherMock->method('unpublishWithTimestamps')->with([$this->productAbstractTransfer->getIdProductAbstract(), 1234]);
+        $this->tester->mockFactoryMethod('createProductAbstractPagePublisher', $productAbstractPagePublisherMock);
         $productConcretePageSearchProductListener = new ProductConcretePageSearchProductListener();
-        $productConcretePageSearchProductListener->setFacade($productPageSearchFacadeMock);
         $productConcretePageSearchProductImageSetListener = new ProductConcretePageSearchProductImageSetListener();
-        $productConcretePageSearchProductImageSetListener->setFacade($productPageSearchFacadeMock);
         $productConcretePageSearchProductAbstractListener = new ProductConcretePageSearchProductAbstractListener();
-        $productConcretePageSearchProductAbstractListener->setFacade($productPageSearchFacadeMock);
 
         $eventTransfers = [
             (new EventEntityTransfer())->setId($this->productConcreteTransfer->getIdProductConcrete()),
@@ -246,11 +237,6 @@ class ProductPageSearchListenerTest extends Unit
         $productConcretePageSearchProductAbstractListener->handleBulk($eventTransfers, ProductEvents::PRODUCT_CONCRETE_UNPUBLISH);
     }
 
-    /**
-     * @group test1
-     *
-     * @return void
-     */
     public function testProductPageProductAbstractListenerStoreData(): void
     {
         // Prepare

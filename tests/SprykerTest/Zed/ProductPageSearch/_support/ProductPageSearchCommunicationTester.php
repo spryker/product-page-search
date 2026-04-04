@@ -16,6 +16,7 @@ use Orm\Zed\ProductPageSearch\Persistence\SpyProductConcretePageSearchQuery;
 use ReflectionClass;
 use Spryker\Zed\ProductPageSearch\Business\ProductPageSearchFacade;
 use Spryker\Zed\ProductPageSearch\Business\Publisher\ProductAbstractPagePublisher;
+use Spryker\Zed\ProductPageSearch\Business\Publisher\ProductAbstractPagePublisherInterface;
 use Spryker\Zed\ProductPageSearch\Business\Publisher\ProductConcretePageSearchPublisher;
 
 /**
@@ -42,6 +43,14 @@ class ProductPageSearchCommunicationTester extends Actor
     public function mockProductPageSearchFacade(): ProductPageSearchFacade
     {
         return Stub::makeEmpty(ProductPageSearchFacade::class);
+    }
+
+    /**
+     * @return (\Spryker\Zed\ProductPageSearch\Business\Publisher\ProductAbstractPagePublisherInterface&object&\PHPUnit\Framework\MockObject\MockObject)|(\Spryker\Zed\ProductPageSearch\Business\Publisher\ProductAbstractPagePublisherInterface&object&\PHPUnit\Framework\MockObject\MockObject&object&\PHPUnit\Framework\MockObject\MockObject)
+     */
+    public function createProductAbstractPagePublisherMock(): ProductAbstractPagePublisherInterface
+    {
+        return Stub::makeEmpty(ProductAbstractPagePublisherInterface::class);
     }
 
     /**
