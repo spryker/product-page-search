@@ -17,6 +17,11 @@ use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFaca
 class PriceProductPageExpander implements PriceProductPageExpanderInterface
 {
     /**
+     * @var array<string>|null
+     */
+    protected static ?array $storeNameByIdMap = null;
+
+    /**
      * @var \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToPriceProductInterface
      */
     protected $priceProductFacade;
@@ -112,14 +117,15 @@ class PriceProductPageExpander implements PriceProductPageExpanderInterface
      */
     protected function getStoreNameByIdMap(): array
     {
-        $storeTransfers = $this->storeFacade->getAllStores();
+        if (static::$storeNameByIdMap === null) {
+            $storeTransfers = $this->storeFacade->getAllStores();
 
-        $idStoreMap = [];
-        foreach ($storeTransfers as $storeTransfer) {
-            $idStoreMap[$storeTransfer->getIdStore()] = $storeTransfer->getName();
+            foreach ($storeTransfers as $storeTransfer) {
+                static::$storeNameByIdMap[$storeTransfer->getIdStore()] = $storeTransfer->getName();
+            }
         }
 
-        return $idStoreMap;
+        return static::$storeNameByIdMap;
     }
 
     protected function getPriceCriteriaTransferForDefaultPriceDimension(): PriceProductCriteriaTransfer

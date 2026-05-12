@@ -11,15 +11,33 @@ use Generated\Shared\Transfer\ProductConcretePageSearchTransfer;
 use Generated\Shared\Transfer\ProductConcreteTransfer;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\ProductPageSearchExtension\Dependency\Plugin\ProductConcretePageDataExpanderPluginInterface;
+use Spryker\Zed\ProductPageSearchExtension\Dependency\Plugin\ProductConcretePageDataExpanderPreloaderPluginInterface;
 
 /**
  * @method \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchQueryContainerInterface getQueryContainer()
  * @method \Spryker\Zed\ProductPageSearch\Communication\ProductPageSearchCommunicationFactory getFactory()
+ * @method \Spryker\Zed\ProductPageSearch\Business\ProductPageSearchBusinessFactory getBusinessFactory()
  * @method \Spryker\Zed\ProductPageSearch\Business\ProductPageSearchFacadeInterface getFacade()
  * @method \Spryker\Zed\ProductPageSearch\ProductPageSearchConfig getConfig()
  */
-class ProductImageProductConcretePageDataExpanderPlugin extends AbstractPlugin implements ProductConcretePageDataExpanderPluginInterface
+class ProductImageProductConcretePageDataExpanderPlugin extends AbstractPlugin implements ProductConcretePageDataExpanderPluginInterface, ProductConcretePageDataExpanderPreloaderPluginInterface
 {
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param array<\Generated\Shared\Transfer\ProductConcreteTransfer> $productConcreteTransfers
+     *
+     * @return void
+     */
+    public function preload(array $productConcreteTransfers): void
+    {
+        $this->getBusinessFactory()
+            ->createProductConcretePageSearchExpander()
+            ->preloadProductImagesSetCollectionByProductIds($productConcreteTransfers);
+    }
+
     /**
      * {@inheritDoc}
      * - Expands provided ProductConcretePageSearchTransfer with images.

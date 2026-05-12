@@ -8,30 +8,16 @@
 namespace Spryker\Zed\ProductPageSearch\Persistence;
 
 use Generated\Shared\Transfer\ProductConcretePageSearchTransfer;
+use Orm\Zed\ProductPageSearch\Persistence\SpyProductConcretePageSearch;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
+use Spryker\Zed\Propel\Persistence\BatchProcessor\ActiveRecordBatchProcessorTrait;
 
 /**
  * @method \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchPersistenceFactory getFactory()
  */
 class ProductPageSearchEntityManager extends AbstractEntityManager implements ProductPageSearchEntityManagerInterface
 {
-    public function saveProductConcretePageSearch(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): ProductConcretePageSearchTransfer
-    {
-        $productConcreteSearchPageEntity = $this->getFactory()
-            ->createProductConcretePageSearchQuery()
-            ->filterByIdProductConcretePageSearch($productConcretePageSearchTransfer->getIdProductConcretePageSearch())
-            ->findOneOrCreate();
-
-        $productConcreteSearchPageEntity = $this->getFactory()
-            ->createProductPageSearchMapper()
-            ->mapProductConcretePageSearchTransferToEntity($productConcretePageSearchTransfer, $productConcreteSearchPageEntity);
-
-        $productConcreteSearchPageEntity->save();
-
-        return $this->getFactory()
-            ->createProductPageSearchMapper()
-            ->mapProductConcretePageSearchEntityToTransfer($productConcreteSearchPageEntity, $productConcretePageSearchTransfer);
-    }
+    use ActiveRecordBatchProcessorTrait;
 
     public function deleteProductConcretePageSearch(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): bool
     {
@@ -47,5 +33,54 @@ class ProductPageSearchEntityManager extends AbstractEntityManager implements Pr
         $productConcreteSearchPageEntity->delete();
 
         return true;
+    }
+
+    /**
+     * @param array<\Generated\Shared\Transfer\ProductConcretePageSearchTransfer> $productConcretePageSearchTransfers
+     */
+    public function saveProductConcretePageSearchBatch(array $productConcretePageSearchTransfers): void
+    {
+        if (!$productConcretePageSearchTransfers) {
+            return;
+        }
+
+        $productIds = array_unique(array_map(
+            fn (ProductConcretePageSearchTransfer $transfer) => $transfer->getFkProduct(),
+            $productConcretePageSearchTransfers,
+        ));
+
+        $existingEntitiesMap = $this->indexExistingEntitiesByProductStoreLocale($productIds);
+        $mapper = $this->getFactory()->createProductPageSearchMapper();
+
+        foreach ($productConcretePageSearchTransfers as $productConcretePageSearchTransfer) {
+            $entity = $existingEntitiesMap[$productConcretePageSearchTransfer->getFkProduct()][$productConcretePageSearchTransfer->getStore()][$productConcretePageSearchTransfer->getLocale()]
+                ?? new SpyProductConcretePageSearch();
+
+            $entity = $mapper->mapProductConcretePageSearchTransferToEntity($productConcretePageSearchTransfer, $entity);
+
+            $this->persist($entity);
+        }
+
+        $this->commit();
+    }
+
+    /**
+     * @param array<int> $productIds
+     *
+     * @return array<int, array<string, array<string, \Orm\Zed\ProductPageSearch\Persistence\SpyProductConcretePageSearch>>>
+     */
+    protected function indexExistingEntitiesByProductStoreLocale(array $productIds): array
+    {
+        $existingEntities = $this->getFactory()
+            ->createProductConcretePageSearchQuery()
+            ->filterByFkProduct_In($productIds)
+            ->find();
+
+        $indexedEntities = [];
+        foreach ($existingEntities as $entity) {
+            $indexedEntities[$entity->getFkProduct()][$entity->getStore()][$entity->getLocale()] = $entity;
+        }
+
+        return $indexedEntities;
     }
 }

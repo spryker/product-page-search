@@ -11,7 +11,10 @@ use Generated\Shared\Transfer\ProductConcretePageSearchTransfer;
 
 interface ProductPageSearchEntityManagerInterface
 {
-    public function saveProductConcretePageSearch(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): ProductConcretePageSearchTransfer;
-
     public function deleteProductConcretePageSearch(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): bool;
+
+    /**
+     * @param array<\Generated\Shared\Transfer\ProductConcretePageSearchTransfer> $productConcretePageSearchTransfers
+     */
+    public function saveProductConcretePageSearchBatch(array $productConcretePageSearchTransfers): void;
 }

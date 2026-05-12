@@ -14,4 +14,11 @@ interface ProductConcretePageSearchExpanderInterface
     public function expandProductConcretePageSearchTransferWithProductImages(
         ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
     ): ProductConcretePageSearchTransfer;
+
+    /**
+     * @param array<\Generated\Shared\Transfer\ProductConcreteTransfer> $productConcreteTransfers
+     *
+     * @return void
+     */
+    public function preloadProductImagesSetCollectionByProductIds(array $productConcreteTransfers): void;
 }

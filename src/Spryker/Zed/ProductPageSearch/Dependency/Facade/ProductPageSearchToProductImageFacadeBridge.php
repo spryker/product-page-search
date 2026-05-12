@@ -55,4 +55,14 @@ class ProductPageSearchToProductImageFacadeBridge implements ProductPageSearchTo
     {
         return $this->productImageFacade->resolveProductImageSetsForLocale($productImageSetTransfers, $localeName);
     }
+
+    /**
+     * @param array<int> $productIds
+     *
+     * @return array<int, array<\Generated\Shared\Transfer\ProductImageSetTransfer>>
+     */
+    public function getProductImagesSetCollectionIndexedByProductId(array $productIds): array
+    {
+        return $this->productImageFacade->getProductImagesSetCollectionIndexedByProductId($productIds);
+    }
 }

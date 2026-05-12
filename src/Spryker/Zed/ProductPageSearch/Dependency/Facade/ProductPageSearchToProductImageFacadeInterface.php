@@ -33,4 +33,11 @@ interface ProductPageSearchToProductImageFacadeInterface
      * @return \ArrayObject<int, \Generated\Shared\Transfer\ProductImageSetTransfer>
      */
     public function resolveProductImageSetsForLocale(ArrayObject $productImageSetTransfers, string $localeName): ArrayObject;
+
+    /**
+     * @param array<int> $productIds
+     *
+     * @return array<int, array<\Generated\Shared\Transfer\ProductImageSetTransfer>>
+     */
+    public function getProductImagesSetCollectionIndexedByProductId(array $productIds): array;
 }

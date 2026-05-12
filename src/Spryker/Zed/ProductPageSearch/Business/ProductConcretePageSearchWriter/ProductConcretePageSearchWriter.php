@@ -22,13 +22,16 @@ class ProductConcretePageSearchWriter implements ProductConcretePageSearchWriter
         $this->entityManager = $entityManager;
     }
 
-    public function saveProductConcretePageSearch(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): ProductConcretePageSearchTransfer
-    {
-        return $this->entityManager->saveProductConcretePageSearch($productConcretePageSearchTransfer);
-    }
-
     public function deleteProductConcretePageSearch(ProductConcretePageSearchTransfer $productConcretePageSearchTransfer): bool
     {
         return $this->entityManager->deleteProductConcretePageSearch($productConcretePageSearchTransfer);
+    }
+
+    /**
+     * @param array<\Generated\Shared\Transfer\ProductConcretePageSearchTransfer> $productConcretePageSearchTransfers
+     */
+    public function saveProductConcretePageSearchBatch(array $productConcretePageSearchTransfers): void
+    {
+        $this->entityManager->saveProductConcretePageSearchBatch($productConcretePageSearchTransfers);
     }
 }

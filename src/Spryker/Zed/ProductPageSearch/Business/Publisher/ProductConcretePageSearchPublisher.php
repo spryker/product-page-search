@@ -25,6 +25,7 @@ use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFaca
 use Spryker\Zed\ProductPageSearch\Dependency\Service\ProductPageSearchToUtilEncodingInterface;
 use Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepositoryInterface;
 use Spryker\Zed\ProductPageSearch\ProductPageSearchConfig;
+use Spryker\Zed\ProductPageSearchExtension\Dependency\Plugin\ProductConcretePageDataExpanderPreloaderPluginInterface;
 
 class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPublisherInterface
 {
@@ -213,6 +214,11 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
             $productConcreteTransfers,
         );
 
+        $this->preloadPageDataExpanderPluginsData($productConcreteTransfers);
+        $this->productConcreteSearchDataMapper->preloadPluginsData($productConcreteTransfers);
+
+        $transfersToSave = [];
+
         foreach ($productConcreteTransfers as $productConcreteTransfer) {
             $localizedAttributesTransfers = [];
             foreach ($productConcreteTransfer->getLocalizedAttributes() as $localizedAttributesTransfer) {
@@ -225,15 +231,23 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
                         continue;
                     }
                     $localizedAttributesTransfer = $localizedAttributesTransfers[$localeIsoCode];
-                    $this->syncProductConcretePageSearchPerLocale(
+                    $productConcretePageSearchTransfer = $this->prepareProductConcretePageSearchTransfer(
                         $productConcreteTransfer,
                         $storeTransfer,
                         $productConcretePageSearchTransfers[$productConcreteTransfer->getIdProductConcrete()][$storeTransfer->getName()][$localizedAttributesTransfer->getLocale()->getLocaleName()] ?? new ProductConcretePageSearchTransfer(),
                         $localizedAttributesTransfer,
                         $filteredProductIds,
                     );
+
+                    if ($productConcretePageSearchTransfer !== null) {
+                        $transfersToSave[] = $productConcretePageSearchTransfer;
+                    }
                 }
             }
+        }
+
+        if ($transfersToSave) {
+            $this->productConcretePageSearchWriter->saveProductConcretePageSearchBatch($transfersToSave);
         }
     }
 
@@ -250,33 +264,30 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
     }
 
     /**
-     * @param \Generated\Shared\Transfer\ProductConcreteTransfer $productConcreteTransfer
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
-     * @param \Generated\Shared\Transfer\ProductConcretePageSearchTransfer $productConcretePageSearchTransfer
-     * @param \Generated\Shared\Transfer\LocalizedAttributesTransfer $localizedAttributesTransfer
-     * @param array<int> $filteredProductIds
+     * Maps the transfer for saving, or deletes the existing entry if the product no longer qualifies for search.
+     * Returns null when the product was deleted or skipped.
      *
-     * @return void
+     * @param array<int> $filteredProductIds
      */
-    protected function syncProductConcretePageSearchPerLocale(
+    protected function prepareProductConcretePageSearchTransfer(
         ProductConcreteTransfer $productConcreteTransfer,
         StoreTransfer $storeTransfer,
         ProductConcretePageSearchTransfer $productConcretePageSearchTransfer,
         LocalizedAttributesTransfer $localizedAttributesTransfer,
         array $filteredProductIds
-    ): void {
+    ): ?ProductConcretePageSearchTransfer {
         if (!in_array($productConcreteTransfer->getIdProductConcrete(), $filteredProductIds)) {
             if ($productConcretePageSearchTransfer->getIdProductConcretePageSearch() !== null) {
                 $this->deleteProductConcretePageSearch($productConcretePageSearchTransfer);
             }
 
-            return;
+            return null;
         }
 
         if (!$productConcreteTransfer->getIsActive() && $productConcretePageSearchTransfer->getIdProductConcretePageSearch() !== null) {
             $this->deleteProductConcretePageSearch($productConcretePageSearchTransfer);
 
-            return;
+            return null;
         }
 
         if (!$this->isValidStoreLocale($storeTransfer->getName(), $localizedAttributesTransfer->getLocale()->getLocaleName())) {
@@ -284,7 +295,7 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
                 $this->deleteProductConcretePageSearch($productConcretePageSearchTransfer);
             }
 
-            return;
+            return null;
         }
 
         if ($localizedAttributesTransfer->getIsSearchable() === false) {
@@ -292,17 +303,15 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
                 $this->deleteProductConcretePageSearch($productConcretePageSearchTransfer);
             }
 
-            return;
+            return null;
         }
 
-        $this->mapProductConcretePageSearchTransfer(
+        return $this->mapProductConcretePageSearchTransfer(
             $productConcreteTransfer,
             $storeTransfer,
             $productConcretePageSearchTransfer,
             $localizedAttributesTransfer,
         );
-
-        $this->productConcretePageSearchWriter->saveProductConcretePageSearch($productConcretePageSearchTransfer);
     }
 
     protected function mapProductConcretePageSearchTransfer(
@@ -403,6 +412,22 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
     protected function isValidStoreLocale(string $storeName, string $localeName): bool
     {
         return in_array($localeName, $this->storeFacade->getStoreByName($storeName)->getAvailableLocaleIsoCodes());
+    }
+
+    /**
+     * @param array<\Generated\Shared\Transfer\ProductConcreteTransfer> $productConcreteTransfers
+     *
+     * @return void
+     */
+    protected function preloadPageDataExpanderPluginsData(array $productConcreteTransfers): void
+    {
+        foreach ($this->pageDataExpanderPlugins as $pageDataExpanderPlugin) {
+            if (!$pageDataExpanderPlugin instanceof ProductConcretePageDataExpanderPreloaderPluginInterface) {
+                continue;
+            }
+
+            $pageDataExpanderPlugin->preload($productConcreteTransfers);
+        }
     }
 
     /**

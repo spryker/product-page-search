@@ -9,6 +9,7 @@ namespace Spryker\Zed\ProductPageSearch\Business\Expander;
 
 use ArrayObject;
 use Generated\Shared\Transfer\ProductConcretePageSearchTransfer;
+use Generated\Shared\Transfer\ProductConcreteTransfer;
 use Generated\Shared\Transfer\ProductImageSetTransfer;
 use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductImageFacadeInterface;
 
@@ -58,6 +59,33 @@ class ProductConcretePageSearchExpander implements ProductConcretePageSearchExpa
      *
      * @return array<\Generated\Shared\Transfer\ProductImageSetTransfer>
      */
+
+    /**
+     * @param array<\Generated\Shared\Transfer\ProductConcreteTransfer> $productConcreteTransfers
+     *
+     * @return void
+     */
+    public function preloadProductImagesSetCollectionByProductIds(array $productConcreteTransfers): void
+    {
+        $uncachedIds = array_values(array_filter(
+            array_map(
+                static fn (ProductConcreteTransfer $transfer): int => $transfer->getIdProductConcreteOrFail(),
+                $productConcreteTransfers,
+            ),
+            static fn (int $idProduct): bool => !array_key_exists($idProduct, static::$imageSetCollectionsResolved),
+        ));
+
+        if (!$uncachedIds) {
+            return;
+        }
+
+        $imageSetsIndexed = $this->productImageFacade->getProductImagesSetCollectionIndexedByProductId($uncachedIds);
+
+        foreach ($imageSetsIndexed as $idProduct => $imageSets) {
+            static::$imageSetCollectionsResolved[$idProduct] = $imageSets;
+        }
+    }
+
     protected function getProductImagesSetCollectionByProductId(int $idProduct): array
     {
         if (!array_key_exists($idProduct, static::$imageSetCollectionsResolved)) {

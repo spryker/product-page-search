@@ -11,6 +11,7 @@ use Generated\Shared\Transfer\LocaleTransfer;
 use Generated\Shared\Transfer\PageMapTransfer;
 use Generated\Shared\Transfer\ProductConcretePageSearchTransfer;
 use Spryker\Zed\ProductPageSearchExtension\Dependency\PageMapBuilderInterface;
+use Spryker\Zed\ProductPageSearchExtension\Dependency\Plugin\ProductConcretePageMapExpanderPreLoaderPluginInterface;
 
 class ProductConcreteSearchDataMapper extends AbstractProductSearchDataMapper
 {
@@ -57,6 +58,22 @@ class ProductConcreteSearchDataMapper extends AbstractProductSearchDataMapper
     public function mapProductDataToSearchData(array $data, LocaleTransfer $localeTransfer): array
     {
         return $this->buildProductPageSearchData($data, $localeTransfer);
+    }
+
+    /**
+     * @param array<\Generated\Shared\Transfer\ProductConcreteTransfer> $productConcreteTransfers
+     *
+     * @return void
+     */
+    public function preloadPluginsData(array $productConcreteTransfers): void
+    {
+        foreach ($this->productConcreteMapExpanderPlugins as $plugin) {
+            if (!$plugin instanceof ProductConcretePageMapExpanderPreLoaderPluginInterface) {
+                continue;
+            }
+
+            $plugin->preload($productConcreteTransfers);
+        }
     }
 
     /**

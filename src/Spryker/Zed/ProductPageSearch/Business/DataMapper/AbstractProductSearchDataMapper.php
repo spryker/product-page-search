@@ -55,6 +55,15 @@ abstract class AbstractProductSearchDataMapper
     abstract public function mapProductDataToSearchData(array $data, LocaleTransfer $localeTransfer): array;
 
     /**
+     * @param array<\Generated\Shared\Transfer\ProductConcreteTransfer> $productConcreteTransfers
+     *
+     * @return void
+     */
+    public function preloadPluginsData(array $productConcreteTransfers): void
+    {
+    }
+
+    /**
      * @param array<string, mixed> $data
      * @param \Generated\Shared\Transfer\LocaleTransfer $localeTransfer
      *
