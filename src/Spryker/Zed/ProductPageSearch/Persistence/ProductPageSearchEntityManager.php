@@ -66,6 +66,27 @@ class ProductPageSearchEntityManager extends AbstractEntityManager implements Pr
 
     /**
      * @param array<int> $productIds
+     */
+    public function deleteProductConcretePageSearchByProductIds(array $productIds): void
+    {
+        if (!$productIds) {
+            return;
+        }
+
+        $productConcretePageSearchCollection = $this->getFactory()
+            ->createProductConcretePageSearchQuery()
+            ->filterByFkProduct_In($productIds)
+            ->find();
+
+        foreach ($productConcretePageSearchCollection as $productConcretePageSearch) {
+            $this->remove($productConcretePageSearch);
+        }
+
+        $this->commit();
+    }
+
+    /**
+     * @param array<int> $productIds
      *
      * @return array<int, array<string, array<string, \Orm\Zed\ProductPageSearch\Persistence\SpyProductConcretePageSearch>>>
      */

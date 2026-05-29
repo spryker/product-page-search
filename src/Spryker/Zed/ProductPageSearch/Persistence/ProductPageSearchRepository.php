@@ -693,4 +693,33 @@ class ProductPageSearchRepository extends AbstractRepository implements ProductP
 
         return $productIdTimestampMap;
     }
+
+    /**
+     * @param int $offset
+     * @param int $limit
+     *
+     * @return array<int>
+     */
+    public function getProductConcreteIdsByOffsetAndLimit(int $offset, int $limit): array
+    {
+        /** @var \Propel\Runtime\Collection\ArrayCollection $productConcreteIds */
+        $productConcreteIds = $this->getFactory()
+            ->getProductQuery()
+            ->select([SpyProductTableMap::COL_ID_PRODUCT])
+            ->offset($offset)
+            ->limit($limit)
+            ->find();
+
+        return array_map(
+            static fn (mixed $id): int => (int)$id,
+            $productConcreteIds->toArray(),
+        );
+    }
+
+    public function countProductConcretes(): int
+    {
+        return $this->getFactory()
+            ->getProductQuery()
+            ->count();
+    }
 }

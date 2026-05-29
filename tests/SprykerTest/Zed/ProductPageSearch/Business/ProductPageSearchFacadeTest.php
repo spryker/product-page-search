@@ -17,6 +17,7 @@ use Generated\Shared\Transfer\ProductConcretePageSearchTransfer;
 use Generated\Shared\Transfer\ProductImageSetTransfer;
 use Generated\Shared\Transfer\ProductPageLoadTransfer;
 use Spryker\Shared\Kernel\Transfer\Exception\RequiredTransferPropertyException;
+use Spryker\Shared\ProductPageSearch\ProductPageSearchConstants;
 use Spryker\Zed\ProductPageSearch\Business\DataMapper\PageMapBuilder;
 use Spryker\Zed\ProductPageSearch\Business\ProductPageSearchBusinessFactory;
 use Spryker\Zed\ProductPageSearch\Business\ProductPageSearchFacade;
@@ -293,6 +294,7 @@ class ProductPageSearchFacadeTest extends Unit
     public function testWriteProductConcretePageSearchCollectionByProductEventsWritesSearchDataForSearchableProduct(): void
     {
         // Arrange
+        $this->tester->setConfig(ProductPageSearchConstants::PRODUCT_CONCRETE_SEARCH_IN_STORAGE_ENABLED, false);
         $productSearchEntity = $this->tester->getLocalizedProductSearchEntity();
         $eventEntityTransfer = (new EventEntityTransfer())->setId($productSearchEntity->getIdProductSearch());
 

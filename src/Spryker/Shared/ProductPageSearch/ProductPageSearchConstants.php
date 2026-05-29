@@ -62,4 +62,16 @@ class ProductPageSearchConstants
      * @var string
      */
     public const FULL_TEXT_BOOSTED_BOOSTING_VALUE = 'FULL_TEXT_BOOSTED_BOOSTING_VALUE';
+
+    /**
+     * Specification:
+     * - When set to `true`, concrete product search results are served from Redis (product storage) instead of OpenSearch.
+     * - `ProductConcretePageSearchPublisher::publish()` will remove existing search index entries rather than writing new ones.
+     * - Enable only after product-concrete storage data has been fully published.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const string PRODUCT_CONCRETE_SEARCH_IN_STORAGE_ENABLED = 'ProductPageSearch:PRODUCT_CONCRETE_SEARCH_IN_STORAGE_ENABLED';
 }

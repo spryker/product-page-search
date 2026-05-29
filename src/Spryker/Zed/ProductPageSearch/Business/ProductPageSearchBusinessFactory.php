@@ -83,6 +83,7 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
     {
         return new ProductConcretePageSearchPublisher(
             $this->getRepository(),
+            $this->getEntityManager(),
             $this->createProductConcretePageSearchReader(),
             $this->createProductConcretePageSearchWriter(),
             $this->getProductFacade(),

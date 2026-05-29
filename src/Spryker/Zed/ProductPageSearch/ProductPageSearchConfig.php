@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\ProductPageSearch;
 
+use Spryker\Shared\ProductPageSearch\ProductPageSearchConstants;
 use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 class ProductPageSearchConfig extends AbstractBundleConfig
@@ -99,5 +100,20 @@ class ProductPageSearchConfig extends AbstractBundleConfig
     public function isProductAbstractAddToCartEnabled(): bool
     {
         return false;
+    }
+
+    /**
+     * Specification:
+     * - When enabled, `publish()` removes existing `spy_product_concrete_page_search` rows instead of writing them.
+     * - Concrete product search results are served from Redis (product storage) rather than OpenSearch.
+     * - Disabled by default; enable only after product-concrete storage data has been fully published.
+     *
+     * @api
+     *
+     * @return bool
+     */
+    public function isConcreteProductSearchInStorageEnabled(): bool
+    {
+        return $this->get(ProductPageSearchConstants::PRODUCT_CONCRETE_SEARCH_IN_STORAGE_ENABLED, false);
     }
 }

@@ -23,6 +23,7 @@ use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductIn
 use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToProductSearchInterface;
 use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFacadeInterface;
 use Spryker\Zed\ProductPageSearch\Dependency\Service\ProductPageSearchToUtilEncodingInterface;
+use Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchEntityManagerInterface;
 use Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepositoryInterface;
 use Spryker\Zed\ProductPageSearch\ProductPageSearchConfig;
 use Spryker\Zed\ProductPageSearchExtension\Dependency\Plugin\ProductConcretePageDataExpanderPreloaderPluginInterface;
@@ -72,6 +73,7 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
      */
     public function __construct(
         protected ProductPageSearchRepositoryInterface $repository,
+        protected ProductPageSearchEntityManagerInterface $entityManager,
         protected ProductConcretePageSearchReaderInterface $productConcretePageSearchReader,
         protected ProductConcretePageSearchWriterInterface $productConcretePageSearchWriter,
         protected ProductPageSearchToProductInterface $productFacade,
@@ -112,6 +114,10 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
      */
     public function publish(array $productIds): void
     {
+        if ($this->productPageSearchConfig->isConcreteProductSearchInStorageEnabled()) {
+            return;
+        }
+
         $isPoolingStateChanged = $this->disableInstancePooling();
 
         $productIds = array_unique(array_filter($productIds));
@@ -178,11 +184,7 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
      */
     public function unpublish(array $productIds): void
     {
-        $productConcretePageSearchTransfers = $this->productConcretePageSearchReader->getProductConcretePageSearchTransfersByProductIds($productIds);
-
-        $this->getTransactionHandler()->handleTransaction(function () use ($productConcretePageSearchTransfers) {
-            $this->executeUnpublishTransaction($productConcretePageSearchTransfers);
-        });
+        $this->entityManager->deleteProductConcretePageSearchByProductIds($productIds);
     }
 
     /**
@@ -248,18 +250,6 @@ class ProductConcretePageSearchPublisher implements ProductConcretePageSearchPub
 
         if ($transfersToSave) {
             $this->productConcretePageSearchWriter->saveProductConcretePageSearchBatch($transfersToSave);
-        }
-    }
-
-    /**
-     * @param array<\Generated\Shared\Transfer\ProductConcretePageSearchTransfer> $productConcretePageSearchTransfers
-     *
-     * @return void
-     */
-    protected function executeUnpublishTransaction(array $productConcretePageSearchTransfers): void
-    {
-        foreach ($productConcretePageSearchTransfers as $productConcretePageSearchTransfer) {
-            $this->deleteProductConcretePageSearch($productConcretePageSearchTransfer);
         }
     }
 

@@ -184,4 +184,19 @@ interface ProductPageSearchRepositoryInterface
      * @return array<int, int>
      */
     public function getRelevantProductConcreteIdsToUpdate(array $productIdTimestampMap): array;
+
+    /**
+     * @param int $offset
+     * @param int $limit
+     *
+     * @return array<int>
+     */
+    public function getProductConcreteIdsByOffsetAndLimit(int $offset, int $limit): array;
+
+    /**
+     * @api
+     *
+     * @return int
+     */
+    public function countProductConcretes(): int;
 }

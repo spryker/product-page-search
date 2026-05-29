@@ -17,4 +17,9 @@ interface ProductPageSearchEntityManagerInterface
      * @param array<\Generated\Shared\Transfer\ProductConcretePageSearchTransfer> $productConcretePageSearchTransfers
      */
     public function saveProductConcretePageSearchBatch(array $productConcretePageSearchTransfers): void;
+
+    /**
+     * @param array<int> $productIds
+     */
+    public function deleteProductConcretePageSearchByProductIds(array $productIds): void;
 }
