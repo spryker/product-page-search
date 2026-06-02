@@ -366,9 +366,10 @@ class ProductPageSearchBusinessFactory extends AbstractBusinessFactory
     public function createPageSearchProductAbstractReadinessProvider(): ProductAbstractReadinessProviderInterface
     {
         return new PageSearchProductAbstractReadinessProvider(
-            $this->getStoreFacade(),
             $this->getSearchClient(),
             $this->getSynchronizationService(),
+            $this->getRepository(),
+            $this->getConfig(),
         );
     }
 

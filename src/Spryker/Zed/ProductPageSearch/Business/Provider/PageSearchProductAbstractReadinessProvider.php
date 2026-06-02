@@ -8,6 +8,7 @@
 namespace Spryker\Zed\ProductPageSearch\Business\Provider;
 
 use ArrayObject;
+use DateTime;
 use Generated\Shared\Transfer\ElasticsearchSearchContextTransfer;
 use Generated\Shared\Transfer\ProductAbstractReadinessRequestTransfer;
 use Generated\Shared\Transfer\ProductReadinessTransfer;
@@ -17,55 +18,44 @@ use Generated\Shared\Transfer\SynchronizationDataTransfer;
 use RuntimeException;
 use Spryker\Client\Search\SearchClientInterface;
 use Spryker\Service\Synchronization\SynchronizationServiceInterface;
-use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFacadeInterface;
+use Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepositoryInterface;
 use Spryker\Zed\ProductPageSearch\ProductPageSearchConfig;
 
 class PageSearchProductAbstractReadinessProvider implements ProductAbstractReadinessProviderInterface
 {
-    /**
-     * @var string
-     */
-    protected const TITLE_IN_PAGE_SEARCH = 'In Page Search for stores/locale';
+    protected const string TITLE_IN_PAGE_SEARCH = 'In Page Search for stores/locale';
 
-    /**
-     * @var string
-     */
-    protected const FALLBACK_VALUE_NO_LOCALES = '-';
+    protected const string FALLBACK_VALUE = '-';
 
-    /**
-     * @var string
-     */
-    protected const FALLBACK_VALUE_NO_STORES = '-';
+    protected const string DEFAULT_PRODUCT_ABSTRACT_INDEX_TYPE = 'page';
 
-    /**
-     * @var string
-     */
-    protected const FORMAT_LOCALE_SEPARATOR = ', ';
+    protected const string DEFAULT_SOURCE_IDENTIFIER = 'page';
 
-    /**
-     * @var string
-     */
-    protected const FORMAT_STORE_LOCALE_SEPARATOR = ' | ';
+    protected const string FORMAT_DATE_OUTPUT = 'Y-m-d H:i:s';
 
-    /**
-     * @var string
-     */
-    protected const FORMAT_STORE_LOCALE = '%s: %s';
+    protected const string FORMAT_DATE_WITH_UTC = '%s UTC';
 
-    /**
-     * @var string
-     */
-    protected const DEFAULT_PRODUCT_ABSTRACT_INDEX_TYPE = 'page';
+    protected const string FORMAT_ROW = '%s: %s, document: %s &mdash; Last updated. DB: <strong>%s</strong>. Status: %s';
 
-    /**
-     * @var string
-     */
-    protected const DEFAULT_SOURCE_IDENTIFIER = 'page';
+    protected const string FORMAT_DOCUMENT_KEY_LINK = '<a href="/search-elasticsearch-gui/maintenance/document-info?documentId=%s&index=%s" target="_blank">%s</a>';
+
+    protected const string STATUS_HTML_SYNCED = '<span style="color:green;font-weight:bold">Synced</span>';
+
+    protected const string STATUS_HTML_UNSYNCED = '<span style="color:red;font-weight:bold">Unsynced</span>';
+
+    protected const string KEY_STORE = 'store';
+
+    protected const string KEY_LOCALE = 'locale';
+
+    protected const string KEY_UPDATED_AT = 'updated_at';
+
+    protected const string KEY_DATA = 'data';
 
     public function __construct(
-        protected ProductPageSearchToStoreFacadeInterface $storeFacade,
         protected SearchClientInterface $searchClient,
-        protected SynchronizationServiceInterface $synchronizationService
+        protected SynchronizationServiceInterface $synchronizationService,
+        protected ProductPageSearchRepositoryInterface $productPageSearchRepository,
+        protected ProductPageSearchConfig $config,
     ) {
     }
 
@@ -80,71 +70,73 @@ class PageSearchProductAbstractReadinessProvider implements ProductAbstractReadi
         ArrayObject $productReadinessTransfers
     ): ArrayObject {
         $idProductAbstract = $productAbstractReadinessRequestTransfer->getProductAbstract()->getIdProductAbstract();
-
-        $storeLocaleMap = $this->getProductAbstractExistenceStoreLocaleMap($idProductAbstract);
-        $values = $this->formatStoreLocaleCombinations($storeLocaleMap);
+        $entries = $this->productPageSearchRepository->getProductAbstractPageSearchEntriesByIdProductAbstract($idProductAbstract);
 
         $productReadinessTransfers->append(
             (new ProductReadinessTransfer())
                 ->setTitle(static::TITLE_IN_PAGE_SEARCH)
-                ->setValues($values),
+                ->setValues($this->buildRowValues($idProductAbstract, $entries)),
         );
 
         return $productReadinessTransfers;
     }
 
     /**
-     * @param int $idProductAbstract
-     *
-     * @return array<string, array<string>>
-     */
-    protected function getProductAbstractExistenceStoreLocaleMap(int $idProductAbstract): array
-    {
-        $productAbstractExistenceStoreLocaleMap = [];
-        $stores = $this->storeFacade->getAllStores();
-
-        foreach ($stores as $storeTransfer) {
-            $locales = $this->getProductAbstractExistenceStore($idProductAbstract, $storeTransfer);
-
-            if ($locales) {
-                $productAbstractExistenceStoreLocaleMap[$storeTransfer->getName()] = $locales;
-            }
-        }
-
-        return $productAbstractExistenceStoreLocaleMap;
-    }
-
-    /**
-     * @param int $idProductAbstract
-     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
+     * @param array<int, array<string, mixed>> $entries One entry per store+locale combination
      *
      * @return array<string>
      */
-    protected function getProductAbstractExistenceStore(int $idProductAbstract, $storeTransfer): array
+    protected function buildRowValues(int $idProductAbstract, array $entries): array
     {
-        $locales = $storeTransfer->getAvailableLocaleIsoCodes();
-
-        if (!$locales) {
-            return [];
+        if (!$entries) {
+            return [static::FALLBACK_VALUE];
         }
 
-        $availableLocales = [];
-        foreach ($locales as $localeIsoCode) {
-            if ($this->hasProductDocument($idProductAbstract, $localeIsoCode, $storeTransfer->getName())) {
-                $availableLocales[] = $localeIsoCode;
-            }
+        $values = [];
+
+        foreach ($entries as $entry) {
+            $values[] = $this->formatRow($idProductAbstract, $entry);
         }
 
-        sort($availableLocales);
-
-        return $availableLocales;
+        return $values;
     }
 
-    protected function hasProductDocument(int $idProductAbstract, string $localeIsoCode, string $storeName): bool
+    /**
+     * @param array<string, mixed> $entry
+     */
+    protected function formatRow(int $idProductAbstract, array $entry): string
     {
-        $documentKey = $this->buildProductAbstractDocumentKey($idProductAbstract, $storeName, $localeIsoCode);
+        $storeName = $entry[static::KEY_STORE];
+        $locale = $entry[static::KEY_LOCALE];
+        $dbData = $entry[static::KEY_DATA] ?? null;
+        $dbUpdatedAt = $entry[static::KEY_UPDATED_AT] ?? null;
 
-        return $this->documentExists($documentKey, $storeName);
+        $dbFormatted = $dbUpdatedAt !== null
+            ? sprintf(static::FORMAT_DATE_WITH_UTC, $this->formatUpdatedAt($dbUpdatedAt))
+            : static::FALLBACK_VALUE;
+
+        $documentKey = $this->buildProductAbstractDocumentKey($idProductAbstract, $storeName, $locale);
+        $esData = $this->readDocumentData($documentKey, $storeName);
+
+        $statusHtml = ($esData !== null && $dbData !== null && $esData === $dbData)
+            ? static::STATUS_HTML_SYNCED
+            : static::STATUS_HTML_UNSYNCED;
+
+        $indexName = $this->buildIndexName($storeName);
+        $documentKeyLink = sprintf(static::FORMAT_DOCUMENT_KEY_LINK, $documentKey, $indexName, $documentKey);
+
+        return sprintf(static::FORMAT_ROW, $storeName, $locale, $documentKeyLink, $dbFormatted, $statusHtml);
+    }
+
+    protected function buildIndexName(string $storeName): string
+    {
+        $parts = array_filter([
+            $this->config->getSearchIndexPrefix(),
+            strtolower($storeName),
+            static::DEFAULT_SOURCE_IDENTIFIER,
+        ]);
+
+        return implode('_', $parts);
     }
 
     protected function buildProductAbstractDocumentKey(int $idProductAbstract, string $storeName, string $localeName): string
@@ -160,7 +152,10 @@ class PageSearchProductAbstractReadinessProvider implements ProductAbstractReadi
         return $storageKeyBuilder->generateKey($synchronizationDataTransfer);
     }
 
-    protected function documentExists(string $documentKey, ?string $storeName = null): bool
+    /**
+     * @return array<string, mixed>|null
+     */
+    protected function readDocumentData(string $documentKey, ?string $storeName = null): ?array
     {
         try {
             $searchDocumentTransfer = new SearchDocumentTransfer();
@@ -183,47 +178,25 @@ class PageSearchProductAbstractReadinessProvider implements ProductAbstractReadi
 
             $document = $this->searchClient->readDocument($searchDocumentTransfer);
 
-            return $document !== null;
-        } catch (RuntimeException $e) {
-            return false;
+            return $document !== null ? (array)$document->getData() : null;
+        } catch (RuntimeException) {
+            return null;
         }
     }
 
-    /**
-     * @param array<string, array<string>> $storeLocaleMap
-     *
-     * @return array<string>
-     */
-    protected function formatStoreLocaleCombinations(array $storeLocaleMap): array
+    protected function formatUpdatedAt(?string $updatedAt): string
     {
-        $formattedParts = [];
-
-        foreach ($this->storeFacade->getAllStores() as $storeTransfer) {
-            $storeName = $storeTransfer->getName();
-            $locales = $storeLocaleMap[$storeName] ?? [];
-
-            $formattedParts[] = $this->formatStoreLocales($storeName, $locales);
+        if ($updatedAt === null) {
+            return static::FALLBACK_VALUE;
         }
 
-        return (bool)$formattedParts
-            ? [implode(static::FORMAT_STORE_LOCALE_SEPARATOR, $formattedParts)]
-            : [static::FALLBACK_VALUE_NO_STORES];
-    }
+        $dateTime = DateTime::createFromFormat('Y-m-d H:i:s.u', $updatedAt)
+            ?: DateTime::createFromFormat('Y-m-d H:i:s', $updatedAt);
 
-    /**
-     * @param string $storeName
-     * @param array<string> $locales
-     *
-     * @return string
-     */
-    protected function formatStoreLocales(string $storeName, array $locales): string
-    {
-        if (!$locales) {
-            return sprintf(static::FORMAT_STORE_LOCALE, $storeName, static::FALLBACK_VALUE_NO_LOCALES);
+        if ($dateTime === false) {
+            return $updatedAt;
         }
 
-        $localeList = implode(static::FORMAT_LOCALE_SEPARATOR, $locales);
-
-        return sprintf(static::FORMAT_STORE_LOCALE, $storeName, $localeList);
+        return $dateTime->format(static::FORMAT_DATE_OUTPUT);
     }
 }

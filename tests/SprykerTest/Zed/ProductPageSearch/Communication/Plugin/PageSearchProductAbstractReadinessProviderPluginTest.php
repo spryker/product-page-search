@@ -11,7 +11,7 @@ use ArrayObject;
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\ProductAbstractReadinessRequestTransfer;
 use Generated\Shared\Transfer\ProductAbstractTransfer;
-use Generated\Shared\Transfer\StoreTransfer;
+use Generated\Shared\Transfer\SearchDocumentTransfer;
 use Generated\Shared\Transfer\SynchronizationDataTransfer;
 use Spryker\Client\Search\SearchClientInterface;
 use Spryker\Service\Synchronization\Dependency\Plugin\SynchronizationKeyGeneratorPluginInterface;
@@ -19,7 +19,8 @@ use Spryker\Service\Synchronization\SynchronizationServiceInterface;
 use Spryker\Zed\ProductPageSearch\Business\ProductPageSearchBusinessFactory;
 use Spryker\Zed\ProductPageSearch\Business\Provider\PageSearchProductAbstractReadinessProvider;
 use Spryker\Zed\ProductPageSearch\Communication\Plugin\ProductManagement\PageSearchProductAbstractReadinessProviderPlugin;
-use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFacadeInterface;
+use Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepositoryInterface;
+use Spryker\Zed\ProductPageSearch\ProductPageSearchConfig;
 
 /**
  * Auto-generated group annotations
@@ -34,91 +35,150 @@ use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFaca
  */
 class PageSearchProductAbstractReadinessProviderPluginTest extends Unit
 {
-    public function testProvideFormatsStoresAndLocales(): void
+    protected const string DOCUMENT_KEY = 'product_abstract:de:de_de:123';
+
+    protected const string INDEX_NAME = 'spryker_de_page';
+
+    protected const string DOCUMENT_KEY_URL_PART = '/search-elasticsearch-gui/maintenance/document-info?documentId=';
+
+    public function testProvideReturnsFallbackWhenNoEntriesExist(): void
     {
         // Arrange
-        $idProductAbstract = 123;
-        $plugin = $this->createPluginWithMocks(
-            $this->createStoreFacadeMockWithLocales([
-                'DE' => ['de_DE', 'en_US'],
-                'US' => ['en_US'],
-            ]),
-            $this->createSearchClientMockForLocales([
-                'product_abstract:de:de_de:123' => true,
-                'product_abstract:de:en_us:123' => false,
-                'product_abstract:us:en_us:123' => true,
-            ]),
-            $this->createSynchronizationServiceMock(),
+        $plugin = $this->createPlugin(
+            $this->createRepositoryMockReturning([]),
+            null,
         );
 
-        $requestTransfer = (new ProductAbstractReadinessRequestTransfer())
-            ->setProductAbstract((new ProductAbstractTransfer())->setIdProductAbstract($idProductAbstract));
-
         // Act
-        $result = $plugin->provide($requestTransfer, new ArrayObject());
+        $result = $plugin->provide($this->createRequest(456), new ArrayObject());
 
         // Assert
-        $this->assertCount(1, $result);
-        $productReadiness = $result[0];
-        $this->assertSame('In Page Search for stores/locale', $productReadiness->getTitle());
-        $this->assertSame('DE: de_DE | US: en_US', $productReadiness->getValues()[0]);
+        $this->assertCount(1, $result->getArrayCopy());
+        $this->assertSame('-', $result->getArrayCopy()[0]->getValues()[0]);
     }
 
-    public function testProvideReturnsDashWhenNoStoresProvided(): void
+    public function testProvideReturnsDocumentKeyLinkInRow(): void
     {
         // Arrange
-        $plugin = $this->createPluginWithMocks(
-            $this->createEmptyStoreFacadeMock(),
-            $this->createSearchClientMockForLocales([]),
-            $this->createSynchronizationServiceMock(),
+        $plugin = $this->createPlugin(
+            $this->createRepositoryMockReturning([
+                $this->buildEntry('DE', 'de_DE', null, null),
+            ]),
+            null,
         );
 
-        $requestTransfer = (new ProductAbstractReadinessRequestTransfer())
-            ->setProductAbstract((new ProductAbstractTransfer())->setIdProductAbstract(456));
-
         // Act
-        $result = $plugin->provide($requestTransfer, new ArrayObject());
+        $result = $plugin->provide($this->createRequest(123), new ArrayObject());
 
         // Assert
-        $this->assertSame('-', $result[0]->getValues()[0]);
+        $row = $result->getArrayCopy()[0]->getValues()[0];
+        $this->assertStringContainsString(static::DOCUMENT_KEY_URL_PART . static::DOCUMENT_KEY, $row);
+        $this->assertStringContainsString('index=' . static::INDEX_NAME, $row);
     }
 
-    public function testProvideHandlesPartialLocaleCoverage(): void
+    public function testProvideReturnsSyncedStatusWhenDocumentMatchesDatabase(): void
     {
         // Arrange
-        $idProductAbstract = 789;
-        $plugin = $this->createPluginWithMocks(
-            $this->createStoreFacadeMockWithLocales([
-                'DE' => ['de_DE', 'en_US'],
-                'US' => ['en_US'],
+        $dbData = ['name' => 'Test Product', 'sku' => 'SKU-123'];
+        $plugin = $this->createPlugin(
+            $this->createRepositoryMockReturning([
+                $this->buildEntry('DE', 'de_DE', $dbData, '2024-01-15 10:30:00'),
             ]),
-            $this->createSearchClientMockForLocales([
-                'product_abstract:de:de_de:789' => true,
-                'product_abstract:de:en_us:789' => false,
-                'product_abstract:us:en_us:789' => false,
-            ]),
-            $this->createSynchronizationServiceMock(),
+            (new SearchDocumentTransfer())->setData($dbData),
         );
 
-        $requestTransfer = (new ProductAbstractReadinessRequestTransfer())
-            ->setProductAbstract((new ProductAbstractTransfer())->setIdProductAbstract($idProductAbstract));
-
         // Act
-        $result = $plugin->provide($requestTransfer, new ArrayObject());
+        $result = $plugin->provide($this->createRequest(123), new ArrayObject());
 
         // Assert
-        $this->assertSame('DE: de_DE | US: -', $result[0]->getValues()[0]);
+        $row = $result->getArrayCopy()[0]->getValues()[0];
+        $this->assertStringContainsString('Synced', $row);
+        $this->assertStringContainsString('DE', $row);
+        $this->assertStringContainsString('de_DE', $row);
+        $this->assertStringContainsString('2024-01-15 10:30:00 UTC', $row);
     }
 
-    protected function createPluginWithMocks(
-        ProductPageSearchToStoreFacadeInterface $storeFacadeMock,
-        SearchClientInterface $searchClientMock,
-        SynchronizationServiceInterface $synchronizationServiceMock
+    public function testProvideReturnsUnsyncedStatusWhenDocumentDoesNotExistInSearch(): void
+    {
+        // Arrange - document not present in Elasticsearch
+        $plugin = $this->createPlugin(
+            $this->createRepositoryMockReturning([
+                $this->buildEntry('DE', 'de_DE', ['key' => 'value'], null),
+            ]),
+            null,
+        );
+
+        // Act
+        $result = $plugin->provide($this->createRequest(123), new ArrayObject());
+
+        // Assert
+        $row = $result->getArrayCopy()[0]->getValues()[0];
+        $this->assertStringContainsString('Unsynced', $row);
+    }
+
+    public function testProvideReturnsUnsyncedStatusWhenDataDiffersFromSearch(): void
+    {
+        // Arrange
+        $dbData = ['name' => 'DB Product'];
+        $esData = ['name' => 'ES Product']; // different
+        $plugin = $this->createPlugin(
+            $this->createRepositoryMockReturning([
+                $this->buildEntry('DE', 'de_DE', $dbData, null),
+            ]),
+            (new SearchDocumentTransfer())->setData($esData),
+        );
+
+        // Act
+        $result = $plugin->provide($this->createRequest(123), new ArrayObject());
+
+        // Assert
+        $this->assertStringContainsString('Unsynced', $result->getArrayCopy()[0]->getValues()[0]);
+    }
+
+    public function testProvideReturnsUnsyncedStatusWhenDatabaseDataIsNull(): void
+    {
+        // Arrange - entry exists but data column is empty
+        $plugin = $this->createPlugin(
+            $this->createRepositoryMockReturning([
+                $this->buildEntry('DE', 'de_DE', null, null),
+            ]),
+            (new SearchDocumentTransfer())->setData(['key' => 'value']),
+        );
+
+        // Act
+        $result = $plugin->provide($this->createRequest(123), new ArrayObject());
+
+        // Assert
+        $this->assertStringContainsString('Unsynced', $result->getArrayCopy()[0]->getValues()[0]);
+    }
+
+    public function testProvideReturnsOneValuePerEntry(): void
+    {
+        // Arrange - two store+locale combinations
+        $plugin = $this->createPlugin(
+            $this->createRepositoryMockReturning([
+                $this->buildEntry('DE', 'de_DE', null, null),
+                $this->buildEntry('DE', 'en_US', null, null),
+            ]),
+            null,
+        );
+
+        // Act
+        $result = $plugin->provide($this->createRequest(123), new ArrayObject());
+
+        // Assert
+        $this->assertCount(2, $result->getArrayCopy()[0]->getValues());
+    }
+
+    protected function createPlugin(
+        ProductPageSearchRepositoryInterface $repositoryMock,
+        SearchDocumentTransfer|null $searchDocument,
     ): PageSearchProductAbstractReadinessProviderPlugin {
         $provider = new PageSearchProductAbstractReadinessProvider(
-            $storeFacadeMock,
-            $searchClientMock,
-            $synchronizationServiceMock,
+            $this->createSearchClientMockReturning($searchDocument),
+            $this->createSynchronizationServiceMock(),
+            $repositoryMock,
+            $this->createConfigMock(),
         );
 
         $factoryMock = $this->getMockBuilder(ProductPageSearchBusinessFactory::class)
@@ -135,64 +195,25 @@ class PageSearchProductAbstractReadinessProviderPluginTest extends Unit
     }
 
     /**
-     * @param array<string, array<string>> $storeToAvailableLocales
-     *
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFacadeInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @return \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected function createStoreFacadeMockWithLocales(array $storeToAvailableLocales): ProductPageSearchToStoreFacadeInterface
+    protected function createRepositoryMockReturning(array $entries): ProductPageSearchRepositoryInterface
     {
-        $storeFacadeMock = $this->getMockBuilder(ProductPageSearchToStoreFacadeInterface::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getAllStores', 'getStoreByName'])
-            ->getMock();
+        $mock = $this->getMockBuilder(ProductPageSearchRepositoryInterface::class)->getMock();
+        $mock->method('getProductAbstractPageSearchEntriesByIdProductAbstract')->willReturn($entries);
 
-        $stores = [];
-        foreach ($storeToAvailableLocales as $storeName => $locales) {
-            $store = (new StoreTransfer())->setName($storeName)->setAvailableLocaleIsoCodes($locales);
-            $stores[] = $store;
-            $storeFacadeMock->method('getStoreByName')->with($storeName)->willReturn($store);
-        }
-
-        $storeFacadeMock->method('getAllStores')->willReturn($stores);
-
-        return $storeFacadeMock;
+        return $mock;
     }
 
     /**
-     * @return \Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFacadeInterface|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected function createEmptyStoreFacadeMock(): ProductPageSearchToStoreFacadeInterface
-    {
-        $storeFacadeMock = $this->getMockBuilder(ProductPageSearchToStoreFacadeInterface::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getAllStores', 'getStoreByName'])
-            ->getMock();
-
-        $storeFacadeMock->method('getAllStores')->willReturn([]);
-        $storeFacadeMock->method('getStoreByName')->willReturn(new StoreTransfer());
-
-        return $storeFacadeMock;
-    }
-
-    /**
-     * @param array<string, bool> $documentExistenceMap
-     *
      * @return \Spryker\Client\Search\SearchClientInterface|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected function createSearchClientMockForLocales(array $documentExistenceMap): SearchClientInterface
+    protected function createSearchClientMockReturning(?SearchDocumentTransfer $document): SearchClientInterface
     {
-        $searchClientMock = $this->getMockBuilder(SearchClientInterface::class)
-            ->getMock();
+        $mock = $this->getMockBuilder(SearchClientInterface::class)->getMock();
+        $mock->method('readDocument')->willReturn($document);
 
-        $searchClientMock->method('readDocument')
-            ->willReturnCallback(function ($searchDocumentTransfer) use ($documentExistenceMap) {
-                $documentId = $searchDocumentTransfer->getId();
-                $exists = $documentExistenceMap[$documentId] ?? false;
-
-                return $exists ? ['data'] : null;
-            });
-
-        return $searchClientMock;
+        return $mock;
     }
 
     /**
@@ -200,23 +221,54 @@ class PageSearchProductAbstractReadinessProviderPluginTest extends Unit
      */
     protected function createSynchronizationServiceMock(): SynchronizationServiceInterface
     {
-        $synchronizationServiceMock = $this->getMockBuilder(SynchronizationServiceInterface::class)
-            ->getMock();
-
-        $keyBuilderMock = $this->getMockBuilder(SynchronizationKeyGeneratorPluginInterface::class)
-            ->getMock();
-
+        $keyBuilderMock = $this->getMockBuilder(SynchronizationKeyGeneratorPluginInterface::class)->getMock();
         $keyBuilderMock->method('generateKey')
-            ->willReturnCallback(function (SynchronizationDataTransfer $dataTransfer) {
-                $store = $dataTransfer->getStore();
-                $locale = $dataTransfer->getLocale();
-                $reference = $dataTransfer->getReference();
-
-                return sprintf('product_abstract:%s:%s:%s', $store, strtolower($locale), $reference);
+            ->willReturnCallback(function (SynchronizationDataTransfer $dataTransfer): string {
+                return sprintf(
+                    'product_abstract:%s:%s:%s',
+                    $dataTransfer->getStore(),
+                    strtolower($dataTransfer->getLocale()),
+                    $dataTransfer->getReference(),
+                );
             });
 
-        $synchronizationServiceMock->method('getStorageKeyBuilder')->willReturn($keyBuilderMock);
+        $mock = $this->getMockBuilder(SynchronizationServiceInterface::class)->getMock();
+        $mock->method('getStorageKeyBuilder')->willReturn($keyBuilderMock);
 
-        return $synchronizationServiceMock;
+        return $mock;
+    }
+
+    /**
+     * @return \Spryker\Zed\ProductPageSearch\ProductPageSearchConfig|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected function createConfigMock(): ProductPageSearchConfig
+    {
+        $mock = $this->getMockBuilder(ProductPageSearchConfig::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getSearchIndexPrefix'])
+            ->getMock();
+
+        $mock->method('getSearchIndexPrefix')->willReturn('spryker');
+
+        return $mock;
+    }
+
+    protected function createRequest(int $idProductAbstract): ProductAbstractReadinessRequestTransfer
+    {
+        return (new ProductAbstractReadinessRequestTransfer())
+            ->setProductAbstract((new ProductAbstractTransfer())->setIdProductAbstract($idProductAbstract));
+    }
+
+    /**
+     * @param array<string, mixed>|null $data
+     */
+    protected function buildEntry(string $store, string $locale, ?array $data, ?string $updatedAt): array
+    {
+        return [
+            'store' => $store,
+            'locale' => $locale,
+            'data' => $data,
+            'updated_at' => $updatedAt,
+        ];
     }
 }

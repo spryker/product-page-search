@@ -722,4 +722,41 @@ class ProductPageSearchRepository extends AbstractRepository implements ProductP
             ->getProductQuery()
             ->count();
     }
+
+    /**
+     * @param int $idProductAbstract
+     *
+     * @return array<string, array<string, string>>
+     */
+    /**
+     * {@inheritDoc}
+     */
+    public function getProductAbstractPageSearchEntriesByIdProductAbstract(int $idProductAbstract): array
+    {
+        $rows = $this->getFactory()
+            ->createProductAbstractPageSearch()
+            ->filterByFkProductAbstract($idProductAbstract)
+            ->select([
+                SpyProductAbstractPageSearchTableMap::COL_STORE,
+                SpyProductAbstractPageSearchTableMap::COL_LOCALE,
+                SpyProductAbstractPageSearchTableMap::COL_UPDATED_AT,
+                SpyProductAbstractPageSearchTableMap::COL_DATA,
+            ])
+            ->find()
+            ->getData();
+
+        $result = [];
+
+        foreach ($rows as $row) {
+            $data = $row[SpyProductAbstractPageSearchTableMap::COL_DATA];
+            $result[] = [
+                'store' => $row[SpyProductAbstractPageSearchTableMap::COL_STORE],
+                'locale' => $row[SpyProductAbstractPageSearchTableMap::COL_LOCALE],
+                'updated_at' => $row[SpyProductAbstractPageSearchTableMap::COL_UPDATED_AT],
+                'data' => is_string($data) ? json_decode($data, true) : $data,
+            ];
+        }
+
+        return $result;
+    }
 }

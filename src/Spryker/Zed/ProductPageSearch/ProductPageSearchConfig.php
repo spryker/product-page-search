@@ -116,4 +116,18 @@ class ProductPageSearchConfig extends AbstractBundleConfig
     {
         return $this->get(ProductPageSearchConstants::PRODUCT_CONCRETE_SEARCH_IN_STORAGE_ENABLED, false);
     }
+
+    /**
+     * Returns the Elasticsearch index prefix (e.g. "spryker").
+     * Reads the same key as SearchElasticsearchConstants::INDEX_PREFIX without
+     * introducing a direct dependency on the search-elasticsearch module.
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function getSearchIndexPrefix(): string
+    {
+        return $this->get('SEARCH_ELASTICSEARCH:INDEX_PREFIX', '');
+    }
 }

@@ -199,4 +199,14 @@ interface ProductPageSearchRepositoryInterface
      * @return int
      */
     public function countProductConcretes(): int;
+
+    /**
+     * Returns one entry per store+locale combination for the given product abstract.
+     * Each entry contains store, locale, updated_at, and the decoded data payload published to the search engine.
+     *
+     * @param int $idProductAbstract
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getProductAbstractPageSearchEntriesByIdProductAbstract(int $idProductAbstract): array;
 }
