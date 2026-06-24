@@ -26,6 +26,8 @@ use Spryker\Zed\Search\Dependency\Plugin\NamedPageMapInterface;
 class ProductConcretePageMapPlugin extends AbstractPlugin implements NamedPageMapInterface
 {
     /**
+     * @api
+     *
      * @var string
      */
     public const KEY_ID_PRODUCT = 'id_product';

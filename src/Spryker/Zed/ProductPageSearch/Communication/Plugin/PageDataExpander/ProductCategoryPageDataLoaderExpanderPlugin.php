@@ -26,6 +26,8 @@ use Spryker\Zed\ProductPageSearch\Dependency\Plugin\ProductPageDataExpanderInter
 class ProductCategoryPageDataLoaderExpanderPlugin extends AbstractPlugin implements ProductPageDataExpanderInterface
 {
     /**
+     * @api
+     *
      * @var string
      */
     public const RESULT_FIELD_PRODUCT_ORDER = 'product_order';

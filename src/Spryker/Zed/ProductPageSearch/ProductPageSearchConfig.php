@@ -13,6 +13,8 @@ use Spryker\Zed\Kernel\AbstractBundleConfig;
 class ProductPageSearchConfig extends AbstractBundleConfig
 {
     /**
+     * @api
+     *
      * @var string
      */
     public const PRODUCT_ABSTRACT_RESOURCE_NAME = 'product_abstract';

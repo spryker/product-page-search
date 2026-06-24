@@ -25,6 +25,8 @@ use Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchQueryContainer;
 class ProductCategoryPageDataExpanderPlugin extends AbstractPlugin implements ProductPageDataExpanderInterface
 {
     /**
+     * @api
+     *
      * @var string
      */
     public const RESULT_FIELD_PRODUCT_ORDER = 'product_order';

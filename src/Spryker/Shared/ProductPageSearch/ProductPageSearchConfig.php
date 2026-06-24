@@ -12,6 +12,8 @@ use Spryker\Shared\Kernel\AbstractSharedConfig;
 class ProductPageSearchConfig extends AbstractSharedConfig
 {
     /**
+     * @api
+     *
      * @see \Spryker\Shared\PriceProduct\PriceProductConfig::PRICE_MODES
      *
      * @var array<string>
@@ -32,21 +34,29 @@ class ProductPageSearchConfig extends AbstractSharedConfig
     public const PRODUCT_ABSTRACT_PAGE_LOAD_DATA = 'PRODUCT_ABSTRACT_PAGE_LOAD_DATA';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const PLUGIN_PRODUCT_PRICE_PAGE_DATA = 'PLUGIN_PRODUCT_PRICE_PAGE_DATA';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const PLUGIN_PRODUCT_CATEGORY_PAGE_DATA = 'PLUGIN_PRODUCT_CATEGORY_PAGE_DATA';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const PLUGIN_PRODUCT_IMAGE_PAGE_DATA = 'PLUGIN_PRODUCT_IMAGE_PAGE_DATA';
 
     /**
+     * @api
+     *
      * Specification:
      *  - Default Price Dimension name.
      *
@@ -57,6 +67,8 @@ class ProductPageSearchConfig extends AbstractSharedConfig
     public const PRICE_DIMENSION_DEFAULT = 'PRICE_DIMENSION_DEFAULT';
 
     /**
+     * @api
+     *
      * Defines queue name for publish.
      *
      * @var string
@@ -64,6 +76,8 @@ class ProductPageSearchConfig extends AbstractSharedConfig
     public const PUBLISH_PRODUCT_ABSTRACT_PAGE = 'publish.page_product_abstract';
 
     /**
+     * @api
+     *
      * Defines queue name for publish.
      *
      * @var string
