@@ -195,6 +195,8 @@ class PageSearchProductAbstractReadinessProviderPluginTest extends Unit
     }
 
     /**
+     * @param array<int, array<string, mixed>> $entries
+     *
      * @return \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected function createRepositoryMockReturning(array $entries): ProductPageSearchRepositoryInterface
