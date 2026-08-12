@@ -22,6 +22,7 @@ use Spryker\Client\Queue\QueueDependencyProvider;
 use Spryker\Zed\Kernel\Container as ZedContainer;
 use Spryker\Zed\Locale\Business\LocaleFacadeInterface;
 use Spryker\Zed\ProductPageSearch\Communication\Plugin\Search\ProductConcretePageMapPlugin;
+use Spryker\Zed\ProductPageSearch\Communication\Plugin\Search\ProductPageMapPlugin;
 use Spryker\Zed\Search\SearchDependencyProvider;
 use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
@@ -206,6 +207,7 @@ class ProductPageSearchBusinessTester extends Actor
     {
         $this->setDependency(SearchDependencyProvider::PLUGIN_SEARCH_PAGE_MAPS, function (ZedContainer $container) {
             return [
+                new ProductPageMapPlugin(),
                 new ProductConcretePageMapPlugin(),
             ];
         });

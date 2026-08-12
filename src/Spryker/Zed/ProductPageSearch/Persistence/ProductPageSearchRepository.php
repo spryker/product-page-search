@@ -24,6 +24,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Formatter\ObjectFormatter;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
+use Spryker\Zed\PropelOrm\Business\Model\Formatter\OptimizedSimpleArrayFormatter;
 
 /**
  * @method \Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchPersistenceFactory getFactory()
@@ -555,6 +556,7 @@ class ProductPageSearchRepository extends AbstractRepository implements ProductP
             ->queryProduct()
             ->select([SpyProductTableMap::COL_ID_PRODUCT, SpyProductTableMap::COL_FK_PRODUCT_ABSTRACT])
             ->filterByFkProductAbstract_In(array_keys($productAbstractIdTimestampMap))
+            ->setFormatter(new OptimizedSimpleArrayFormatter())
             ->find()
             ->getData();
 

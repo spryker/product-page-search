@@ -18,6 +18,7 @@ use Spryker\Zed\ProductPageSearch\Business\Mapper\ProductPageSearchMapperInterfa
 use Spryker\Zed\ProductPageSearch\Business\Model\ProductPageSearchWriterInterface;
 use Spryker\Zed\ProductPageSearch\Business\Reader\AddToCartSkuReaderInterface;
 use Spryker\Zed\ProductPageSearch\Dependency\Facade\ProductPageSearchToStoreFacadeInterface;
+use Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchQueryContainer;
 use Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchQueryContainerInterface;
 use Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepositoryInterface;
 use Spryker\Zed\ProductPageSearch\ProductPageSearchConfig;
@@ -55,6 +56,8 @@ class ProductAbstractPagePublisher implements ProductAbstractPagePublisherInterf
      * @var string
      */
     public const LOCALE_NAME = 'LOCALE_NAME';
+
+    protected const string KEY_PRODUCT_LOCALIZED_ATTRIBUTES = 'SpyProductLocalizedAttributess';
 
     /**
      * @var array<int, array<string>>
@@ -508,12 +511,14 @@ class ProductAbstractPagePublisher implements ProductAbstractPagePublisherInterf
             ->find()
             ->getData();
 
-        $productConcreteEntities = $this->queryContainer
+        $productConcreteRows = $this->queryContainer
             ->queryProductConcretesByAbstractProductIdsAndLocaleIsoCodes($productAbstractIds, $allLocaleIsoCodes)
             ->find()
             ->getData();
 
-        $productConcreteIds = array_column($productConcreteEntities, 'id_product');
+        $productConcreteEntities = $this->mapProductConcreteRowsToProductConcreteEntities($productConcreteRows);
+
+        $productConcreteIds = array_column($productConcreteEntities, ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_ID_PRODUCT);
 
         $productSearchEntities = $this->queryContainer
             ->queryProductSearchByProductConcreteIdsAndLocaleIsoCodes($productConcreteIds, $allLocaleIsoCodes)
@@ -529,6 +534,40 @@ class ProductAbstractPagePublisher implements ProductAbstractPagePublisherInterf
             $productConcreteEntities,
             $productAbstractLocalizedAttributeDataCollection,
         );
+    }
+
+    /**
+     * @param array<array<string, mixed>> $productConcreteRows
+     *
+     * @return array<array<string, mixed>>
+     */
+    protected function mapProductConcreteRowsToProductConcreteEntities(array $productConcreteRows): array
+    {
+        $productConcreteEntities = [];
+
+        foreach ($productConcreteRows as $productConcreteRow) {
+            $idProduct = (int)$productConcreteRow[ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_ID_PRODUCT];
+
+            if (!isset($productConcreteEntities[$idProduct])) {
+                $productConcreteEntities[$idProduct] = [
+                    ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_ID_PRODUCT => $idProduct,
+                    ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_SKU => $productConcreteRow[ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_SKU],
+                    ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_IS_ACTIVE => (bool)$productConcreteRow[ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_IS_ACTIVE],
+                    ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_ATTRIBUTES => $productConcreteRow[ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_ATTRIBUTES],
+                    ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_FK_PRODUCT_ABSTRACT => (int)$productConcreteRow[ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_FK_PRODUCT_ABSTRACT],
+                    static::KEY_PRODUCT_LOCALIZED_ATTRIBUTES => [],
+                ];
+            }
+
+            $productConcreteEntities[$idProduct][static::KEY_PRODUCT_LOCALIZED_ATTRIBUTES][] = [
+                ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_FK_LOCALE => (int)$productConcreteRow[ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_FK_LOCALE],
+                ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_LOCALIZED_NAME => $productConcreteRow[ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_LOCALIZED_NAME],
+                ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_LOCALIZED_DESCRIPTION => $productConcreteRow[ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_LOCALIZED_DESCRIPTION],
+                ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_ATTRIBUTES => $productConcreteRow[ProductPageSearchQueryContainer::COL_PRODUCT_CONCRETE_LOCALIZED_ATTRIBUTES],
+            ];
+        }
+
+        return array_values($productConcreteEntities);
     }
 
     protected function hydrateProductConcreteEntitiesWithProductSearchEntities(array $productSearchEntities, array $productConcreteEntities): array

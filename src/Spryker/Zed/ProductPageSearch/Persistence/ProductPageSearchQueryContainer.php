@@ -17,6 +17,7 @@ use Orm\Zed\Category\Persistence\SpyCategoryNodeQuery;
 use Orm\Zed\PriceProduct\Persistence\Map\SpyPriceProductTableMap;
 use Orm\Zed\Product\Persistence\Map\SpyProductAbstractLocalizedAttributesTableMap;
 use Orm\Zed\Product\Persistence\Map\SpyProductAbstractTableMap;
+use Orm\Zed\Product\Persistence\Map\SpyProductLocalizedAttributesTableMap;
 use Orm\Zed\Product\Persistence\Map\SpyProductTableMap;
 use Orm\Zed\Product\Persistence\SpyProductAbstractLocalizedAttributesQuery;
 use Orm\Zed\Product\Persistence\SpyProductQuery;
@@ -28,6 +29,7 @@ use Orm\Zed\ProductSearch\Persistence\SpyProductSearchQuery;
 use Orm\Zed\Url\Persistence\Map\SpyUrlTableMap;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Spryker\Zed\Kernel\Persistence\AbstractQueryContainer;
+use Spryker\Zed\PropelOrm\Business\Model\Formatter\OptimizedSimpleArrayFormatter;
 use Spryker\Zed\PropelOrm\Business\Model\Formatter\PropelArraySetFormatter;
 use Spryker\Zed\PropelOrm\Business\Runtime\ActiveQuery\Criteria;
 
@@ -50,6 +52,24 @@ class ProductPageSearchQueryContainer extends AbstractQueryContainer implements 
      * @var string
      */
     public const VIRT_COLUMN_ID_CATEGORY_NODE = 'id_category_node';
+
+    public const string COL_PRODUCT_CONCRETE_ID_PRODUCT = 'id_product';
+
+    public const string COL_PRODUCT_CONCRETE_SKU = 'sku';
+
+    public const string COL_PRODUCT_CONCRETE_IS_ACTIVE = 'is_active';
+
+    public const string COL_PRODUCT_CONCRETE_FK_PRODUCT_ABSTRACT = 'fk_product_abstract';
+
+    public const string COL_PRODUCT_CONCRETE_ATTRIBUTES = 'attributes';
+
+    public const string COL_PRODUCT_CONCRETE_FK_LOCALE = 'fk_locale';
+
+    public const string COL_PRODUCT_CONCRETE_LOCALIZED_NAME = 'name';
+
+    public const string COL_PRODUCT_CONCRETE_LOCALIZED_DESCRIPTION = 'description';
+
+    public const string COL_PRODUCT_CONCRETE_LOCALIZED_ATTRIBUTES = 'localized_attributes';
 
     /**
      * @var string
@@ -175,14 +195,23 @@ class ProductPageSearchQueryContainer extends AbstractQueryContainer implements 
     {
         return $this->getFactory()
             ->getProductQuery()
-            ->joinWithSpyProductLocalizedAttributes()
             ->useSpyProductLocalizedAttributesQuery()
                 ->useLocaleQuery()
                     ->filterByLocaleName_In($localeIsoCodes)
                 ->endUse()
             ->endUse()
             ->filterByFkProductAbstract_In($abstractProductIds)
-            ->setFormatter(ModelCriteria::FORMAT_ARRAY);
+            ->addAsColumn(static::COL_PRODUCT_CONCRETE_ID_PRODUCT, SpyProductTableMap::COL_ID_PRODUCT)
+            ->addAsColumn(static::COL_PRODUCT_CONCRETE_SKU, SpyProductTableMap::COL_SKU)
+            ->addAsColumn(static::COL_PRODUCT_CONCRETE_IS_ACTIVE, SpyProductTableMap::COL_IS_ACTIVE)
+            ->addAsColumn(static::COL_PRODUCT_CONCRETE_FK_PRODUCT_ABSTRACT, SpyProductTableMap::COL_FK_PRODUCT_ABSTRACT)
+            ->addAsColumn(static::COL_PRODUCT_CONCRETE_ATTRIBUTES, SpyProductTableMap::COL_ATTRIBUTES)
+            ->addAsColumn(static::COL_PRODUCT_CONCRETE_FK_LOCALE, SpyProductLocalizedAttributesTableMap::COL_FK_LOCALE)
+            ->addAsColumn(static::COL_PRODUCT_CONCRETE_LOCALIZED_NAME, SpyProductLocalizedAttributesTableMap::COL_NAME)
+            ->addAsColumn(static::COL_PRODUCT_CONCRETE_LOCALIZED_DESCRIPTION, SpyProductLocalizedAttributesTableMap::COL_DESCRIPTION)
+            ->addAsColumn(static::COL_PRODUCT_CONCRETE_LOCALIZED_ATTRIBUTES, SpyProductLocalizedAttributesTableMap::COL_ATTRIBUTES)
+            ->select([static::COL_PRODUCT_CONCRETE_ID_PRODUCT])
+            ->setFormatter(new OptimizedSimpleArrayFormatter());
     }
 
     /**

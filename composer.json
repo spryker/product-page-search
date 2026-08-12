@@ -21,7 +21,7 @@
         "spryker/product-page-search-extension": "^1.7.0",
         "spryker/product-search": "^5.15.0",
         "spryker/propel": "^3.47.0",
-        "spryker/propel-orm": "^1.5.0",
+        "spryker/propel-orm": "^1.22.0",
         "spryker/publisher-extension": "^1.0.0",
         "spryker/search": "^7.0.0 || ^8.0.0",
         "spryker/store": "^1.7.0",

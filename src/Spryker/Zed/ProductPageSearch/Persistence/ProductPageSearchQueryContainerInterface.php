@@ -232,7 +232,8 @@ interface ProductPageSearchQueryContainerInterface extends QueryContainerInterfa
 
     /**
      * Specification:
-     * - Returns `SpyProductQuery` with `SpyProductLocalizedAttributes` filtered by abstract product ids and locale iso codes.
+     * - Returns `SpyProductQuery` joined with `SpyProductLocalizedAttributes` filtered by abstract product ids and locale iso codes.
+     * - Uses `OptimizedSimpleArrayFormatter` to return a flat list of product concrete rows (one row per product concrete and locale).
      *
      * @api
      *
