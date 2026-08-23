@@ -783,7 +783,6 @@ class ProductPageSearchListenerTest extends Unit
     {
         $reflectedClass = new ReflectionClass(ProductCategoryPageDataExpanderPlugin::class);
         $property = $reflectedClass->getProperty('categoryTree');
-        $property->setAccessible(true);
         $property->setValue(null);
     }
 

@@ -60,11 +60,9 @@ class ProductPageSearchCommunicationTester extends Actor
     {
         $refClass = new ReflectionClass(ProductAbstractPagePublisher::class);
         $property = $refClass->getProperty('publishedProductAbstractIds');
-        $property->setAccessible(true);
         $property->setValue([]);
 
         $property = $refClass->getProperty('unpublishedProductAbstractIds');
-        $property->setAccessible(true);
         $property->setValue([]);
     }
 
@@ -75,11 +73,9 @@ class ProductPageSearchCommunicationTester extends Actor
     {
         $refClass = new ReflectionClass(ProductConcretePageSearchPublisher::class);
         $property = $refClass->getProperty('publishedProductConcreteIds');
-        $property->setAccessible(true);
         $property->setValue([]);
 
         $property = $refClass->getProperty('unpublishedProductConcreteIds');
-        $property->setAccessible(true);
         $property->setValue([]);
     }
 
