@@ -8,6 +8,7 @@
 namespace SprykerTest\Zed\ProductPageSearch\Persistence;
 
 use Codeception\Test\Unit;
+use Orm\Zed\ProductPageSearch\Persistence\SpyProductConcretePageSearch;
 use Spryker\Zed\ProductPageSearch\Persistence\ProductPageSearchRepository;
 
 /**
@@ -47,5 +48,51 @@ class ProductPageSearchRepositoryTest extends Unit
         $this->assertCount(2, $result);
         $this->assertContains($productAbstractIds[0], $result);
         $this->assertContains($productAbstractIds[1], $result);
+    }
+
+    /**
+     * @dataProvider provideTimestampComparisonCases
+     */
+    public function testGetRelevantProductConcreteIdsToUpdate(int $timestamp, string $storedUpdatedAt, bool $expectedKept): void
+    {
+        // Arrange
+        $productConcreteTransfer = $this->tester->haveProduct();
+        $idProduct = $productConcreteTransfer->getIdProductConcrete();
+        $this->haveProductConcretePageSearch($idProduct, $storedUpdatedAt);
+
+        // Act
+        $result = (new ProductPageSearchRepository())->getRelevantProductConcreteIdsToUpdate([$idProduct => $timestamp]);
+
+        // Assert
+        if ($expectedKept) {
+            $this->assertArrayHasKey($idProduct, $result);
+
+            return;
+        }
+
+        $this->assertArrayNotHasKey($idProduct, $result);
+    }
+
+    /**
+     * @return iterable<string, array{int, string, bool}>
+     */
+    public function provideTimestampComparisonCases(): iterable
+    {
+        yield 'zero timestamp is kept despite an existing page-search entry' => [0, '2024-01-01 00:00:00', true];
+        yield 'timestamp older than last update is removed' => [strtotime('2024-01-01 00:00:00'), '2025-01-01 00:00:00', false];
+        yield 'timestamp newer than last update is kept' => [strtotime('2025-01-01 00:00:00'), '2024-01-01 00:00:00', true];
+    }
+
+    protected function haveProductConcretePageSearch(int $idProduct, string $updatedAt): SpyProductConcretePageSearch
+    {
+        $productConcretePageSearchEntity = new SpyProductConcretePageSearch();
+        $productConcretePageSearchEntity->setFkProduct($idProduct)
+            ->setStructuredData('{}')
+            ->setStore('DE')
+            ->setLocale('de_DE')
+            ->setUpdatedAt($updatedAt)
+            ->save();
+
+        return $productConcretePageSearchEntity;
     }
 }

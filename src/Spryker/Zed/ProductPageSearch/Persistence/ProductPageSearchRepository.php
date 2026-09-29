@@ -688,7 +688,10 @@ class ProductPageSearchRepository extends AbstractRepository implements ProductP
 
         foreach ($productData as $product) {
             $idProduct = $product[SpyProductConcretePageSearchTableMap::COL_FK_PRODUCT];
-            if ($productIdTimestampMap[$idProduct] <= strtotime($product[static::COL_LAST_UPDATE_TIME])) {
+            if (
+                !empty($productIdTimestampMap[$idProduct])
+                && $productIdTimestampMap[$idProduct] <= strtotime($product[static::COL_LAST_UPDATE_TIME])
+            ) {
                 unset($productIdTimestampMap[$idProduct]);
             }
         }
